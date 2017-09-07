@@ -1,18 +1,24 @@
 package kr.goci.goa.file.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.hateoas.ResourceSupport;
 
-public class Product {
+public class ImageDto {
     @Data
-    @AllArgsConstructor
-    public static class Response extends ResourceSupport {
+    @ToString
+    public static class Create {
         private int startX;
         private int startY;
         private int endX;
         private int endY;
         private String date;
         private String type;
+    }
+
+    @Data
+    public static class Response extends ResourceSupport {
+        private String path;
+        private String name;
     }
 }

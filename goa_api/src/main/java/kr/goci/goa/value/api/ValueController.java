@@ -38,7 +38,6 @@ public class ValueController {
         } catch (JsonProcessingException e) {
             return new ResponseEntity<>(new ErrorResponse("파싱 실패", "parsing.error"), HttpStatus.BAD_REQUEST);
         }
-
         return new ResponseEntity<>(values, HttpStatus.OK);
     }
 

@@ -1,7 +1,8 @@
 package kr.goci.goa.value.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kr.goci.goa.file.domain.Image;
+import kr.goci.goa.file.domain.ImageDto;
+import kr.goci.goa.file.domain.ProductDto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,7 +70,7 @@ public class ValueControllerTest {
 
     @Test
     public void generate_Image_OK() throws Exception {
-        Image.Create image = new Image.Create();
+        ImageDto.Create image = new ImageDto.Create();
         image.setDate("2017-09-03-07");
         image.setStartX(1028);
         image.setStartY(1436);
@@ -88,7 +89,7 @@ public class ValueControllerTest {
 
     @Test
     public void generate_Image_BAD_REQUEST() throws Exception {
-        Image.Create image = new Image.Create();
+        ImageDto.Create image = new ImageDto.Create();
         image.setDate("1991-09-03-07");
         image.setStartX(1028);
         image.setStartY(1436);
@@ -96,12 +97,38 @@ public class ValueControllerTest {
         image.setEndY(2512);
         image.setType("CDOM");
 
-        ResultActions result = mockMvc
-                .perform(post("/api/images")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(image)));
+        ResultActions result = mockMvc.perform(post("/api/images")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(image)));
 
         result.andDo(print());
         result.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void makeCroppedHe5() throws Exception {
+        ProductDto.Create product = new ProductDto.Create();
+        product.setDate("2017-09-03-07");
+        product.setStartX("2868");
+        product.setStartY("1804");
+        product.setEndX("4076");
+        product.setEndY("2996");
+        product.setType("CDOM");
+        product.setOutputType("he5");
+
+        ResultActions result = mockMvc.perform(post("/api/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(product)));
+
+        result.andDo(print());
+        result.andExpect(status().isOk());
+    }
+
+    @Test
+    public void JPATest() throws Exception {
+        ResultActions result = mockMvc.perform(get("/api/products/hash/NgcC9FzFu"));
+
+        result.andDo(print());
+        result.andExpect(status().isOk());
     }
 }
