@@ -18,7 +18,6 @@ public class ImageDto {
 
     @Data
     public static class Response extends ResourceSupport {
-        private String path;
-        private String name;
+        private String hashcode;
     }
 }

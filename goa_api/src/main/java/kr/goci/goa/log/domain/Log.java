@@ -13,15 +13,12 @@ public class Log {
     @Entity
     @Data
     @NoArgsConstructor
-    @AllArgsConstructor
     @ToString
     public static class Down {
         @Id
         @GeneratedValue
         private Long id;
-        private String filename;
-        private String type;
-        private String outputType;
+        private String hash;
         private String ip;
         @Temporal(TemporalType.TIMESTAMP)
         private Date date;

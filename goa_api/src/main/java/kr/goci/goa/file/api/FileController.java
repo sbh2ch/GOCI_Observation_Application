@@ -3,13 +3,16 @@ package kr.goci.goa.file.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.goci.goa.commons.ErrorResponse;
+import kr.goci.goa.commons.Exception.SQLNotExistException;
+import kr.goci.goa.commons.Exception.OutOfRangeException;
 import kr.goci.goa.file.domain.ImageDto;
 import kr.goci.goa.file.domain.ProductDto;
 import kr.goci.goa.file.service.FileService;
 import kr.goci.goa.log.domain.Log;
-import kr.goci.goa.log.service.LogService;
+import kr.goci.goa.log.repository.DownLogRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +20,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Date;
 
 @CrossOrigin("*")
 @RestController
@@ -25,7 +33,7 @@ import java.io.IOException;
 @Transactional
 public class FileController {
     @Autowired
-    private LogService logService;
+    private DownLogRepository downLogRepository;
 
     @Autowired
     private FileService fileService;
@@ -33,22 +41,21 @@ public class FileController {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @GetMapping("/api/images/paths/{path}/names/{name}")
-    public ResponseEntity displayImage(@PathVariable String path, @PathVariable String name) {
+    @GetMapping("/api/images/hashes/{hashcode}")
+    public ResponseEntity displayImage(@PathVariable String hashcode) {
         byte[] image;
 
         try {
-            image = fileService.displayImage(path, name);
+            image = fileService.displayImage(hashcode);
         } catch (IOException e) {
             log.error("image.file.IO.Exception, {}", e.toString());
 
-            return new ResponseEntity<>(new ErrorResponse("잘못된 요청입니다.", "bad.request.show.image"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponse("잘못 된 요청입니다.", "bad.request.show.image"), HttpStatus.BAD_REQUEST);
         }
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.IMAGE_JPEG);
         headers.setContentLength(image.length);
-
 
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
@@ -62,7 +69,7 @@ public class FileController {
             res = fileService.makeImage(image);
         } catch (IOException e) {
             log.error("image create error : {}", e.toString());
-            return new ResponseEntity<>(new ErrorResponse("잘못된 요청입니다.", "bad.request.create.image"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponse("잘못 된 요청입니다.", "bad.request.create.image"), HttpStatus.BAD_REQUEST);
         }
 
         String result = null;
@@ -74,12 +81,7 @@ public class FileController {
             return new ResponseEntity<>(new ErrorResponse("파싱 실패", "parsing.fail"), HttpStatus.CONFLICT);
         }
 
-//        Product.Response res = new Product.Response(1, 1, 3, 3, "2017-09-05-03", "CDOM");
-//
-//        res.add(new Link("http://localhost:8080/api/1999-03-04-00/3-3/3/CDOM").withRel("img"));
-
-
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @PostMapping(value = "/api/products", produces = "appication/json;charset=UTF-8")
@@ -89,7 +91,7 @@ public class FileController {
             res = fileService.makeProduct(product);
         } catch (Exception e) {
             log.error("product create error : {}", e.toString());
-            return new ResponseEntity<>(new ErrorResponse("잘못된 요청입니다.", "bad.request.create.product"), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new ErrorResponse("잘못 된 요청입니다.", "bad.request.create.product"), HttpStatus.BAD_REQUEST);
         }
 
         String result = null;
@@ -100,13 +102,47 @@ public class FileController {
             return new ResponseEntity<>(new ErrorResponse("파싱 실패", "parsing.fail"), HttpStatus.CONFLICT);
         }
 
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/api/products/hash/{hash}")
-    public ResponseEntity getProduct(@PathVariable String hash) throws Exception {
-        Log.Products test = fileService.test(hash);
+    @GetMapping(value = "/api/products/hashes/{hash}")
+    public ResponseEntity getProduct(@PathVariable String hash, HttpServletRequest request) {
+        File file = fileService.downloadProduct(hash);
 
-        return new ResponseEntity<>(objectMapper.writeValueAsString(test), HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/x-msdownlpad"));
+        headers.setContentLength(file.length());
+        headers.setContentDispositionFormData("attachment", file.getName());
+
+        try {
+            InputStreamResource inputStreamResource = new InputStreamResource(new FileInputStream(file));
+
+            Log.Down downloadLog = new Log.Down();
+            downloadLog.setDate(new Date());
+            downloadLog.setIp(request.getRemoteAddr());
+            downloadLog.setHash(hash);
+
+            downLogRepository.save(downloadLog);
+            log.info("download log : {}", downloadLog.toString());
+
+            return new ResponseEntity<>(inputStreamResource, headers, HttpStatus.OK);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(new ErrorResponse("잘못 된 요청입니다.", "bad.request.download.product"), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @ExceptionHandler(SQLNotExistException.class)
+    public ResponseEntity handleSQLNotExistException(SQLNotExistException e) {
+
+        return new ResponseEntity<>(new ErrorResponse(e.getFilename() + " : 해당 코드가 없습니다.", "code.not.exist.exception"), HttpStatus.NO_CONTENT);
+    }
+
+    @ExceptionHandler(OutOfRangeException.class)
+    public ResponseEntity handleOutOfRangeException(OutOfRangeException e) {
+
+        return new ResponseEntity<>(new ErrorResponse(e.getMessage(), "out.of.range.exception"), HttpStatus.BAD_REQUEST);
     }
 }
