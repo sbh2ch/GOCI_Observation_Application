@@ -37,7 +37,7 @@ public class FileService {
             throw new SQLNotExistException("display image");
         }
 
-        File image = new File("E:GOA_TEMP/" + selectedImage.getPath() + "/" + selectedImage.getName()+".JPG");
+        File image = new File("E:GOA_TEMP/" + selectedImage.getPath() + "/" + selectedImage.getName() + ".JPG");
         byte[] result = Files.readAllBytes(image.toPath());
         log.info("path : {}, name : {}", selectedImage.getPath(), selectedImage.getName());
 
@@ -68,18 +68,7 @@ public class FileService {
         responseImage.setHashcode(hash);
         responseImage.add(new Link(SERVER_NAME + "/api/images/hashes/" + hash).withRel("show_image"));
 
-        Image imageJpa = new Image();
-        imageJpa.setDate(new Date());
-        imageJpa.setFiledate(image.getDate());
-        imageJpa.setStartX(image.getStartX());
-        imageJpa.setStartY(image.getStartY());
-        imageJpa.setEndX(image.getEndX());
-        imageJpa.setEndY(image.getEndY());
-        imageJpa.setType(image.getType());
-        imageJpa.setName(fileName);
-        imageJpa.setPath(filePath);
-        imageJpa.setHashcode(hash);
-        imageRepository.save(imageJpa);
+        imageRepository.save(new Image(filePath, fileName, image.getDate(), image.getStartX(), image.getStartY(), image.getEndX(), image.getEndY(), image.getType(), hash, new Date()));
 
         return responseImage;
     }
