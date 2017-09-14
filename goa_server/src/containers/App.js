@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Header from '../components/Header';
 import Layout from '../components/Layout';
 import MenuSelector from '../components/Menu/menuSelector';
-import Date from '../components/Date/Date';
+import Date from '../components/Option/Date';
 import MapContainer from '../containers/MapContainer';
 class App extends Component {
 
@@ -14,7 +14,7 @@ class App extends Component {
                 <Layout.Main>
                     <MenuSelector/>
                     <Layout.Option>
-                        <Layout.Title style={{border: `1px solid #bcbcbc`}}>
+                        <Layout.Title style={{borderBottom: `1px solid #bcbcbc`}}>
                             Real Time Satellite Image
                         </Layout.Title>
                         <Date/>

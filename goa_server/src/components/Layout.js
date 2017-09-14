@@ -20,7 +20,7 @@ const Wrapper = styled.div`
 class Layout extends React.Component {
     componentDidMount() {
         window.addEventListener('resize', () => {
-            this.main.style.height = window.innerHeight - 1 + 'px'
+            this.main.style.height = window.innerHeight  + 'px'
         });
     }
 
@@ -65,7 +65,7 @@ Layout.Map = styled.div`
     display: flex;
     background: ${oc.gray[3]};
     flex-direction: column;
-    height: 1000px;
+    height: 100%;
     flex: 1;
     padding-bottom: inherit;
 `;
@@ -75,7 +75,7 @@ Layout.Option = styled.div`
     flex-shrink: 0;
     flex-direction: column;
     display: flex;
-    flex-basis: 400px;
+    flex-basis: 350px;
     padding-bottom: inherit;
     overflow: auto;
     border-right: 1px solid ${oc.gray[4]};

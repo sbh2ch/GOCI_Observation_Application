@@ -163,7 +163,7 @@ class MapContainer extends Component {
             if (valueArr[zoom - 3][arrX][arrY] === undefined) {
                 if (latArr[zoom - 3][arrX][arrY] === undefined) {
                     $.ajax({
-                        url: 'http://localhost:8080/api/lonlat/' + arrX + '-' + arrY + '/' + zoom,
+                        url: 'http://kosc.kr:8080/api/lonlat/' + arrX + '-' + arrY + '/' + zoom,
                         method: 'GET',
                         async: false,
                         dataType: 'JSON',
