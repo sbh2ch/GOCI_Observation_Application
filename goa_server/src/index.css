@@ -1,5 +1,21 @@
+@import url('https://fonts.googleapis.com/css?family=Volkhov');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url("http://fonts.googleapis.com/earlyaccess/nanumgothic.css");
+
 body {
-  margin: 0;
-  padding: 0;
-  font-family: sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    background: #e9ecef;
+    box-sizing: border-box;
+
+}
+
+html {
+    height: 100%;
+}
+
+* {
+    box-sizing: inherit;
 }

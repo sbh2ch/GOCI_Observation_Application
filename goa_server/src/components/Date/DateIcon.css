@@ -1,0 +1,8 @@
+.date_icon {
+    color: #868e96;
+    transition: all .1s;
+    cursor: pointer;
+}
+.date_icon:hover {
+    color: #343a40;
+}
