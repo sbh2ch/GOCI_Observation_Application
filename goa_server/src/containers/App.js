@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import Layout from '../components/Layout';
 import MenuSelector from '../components/Menu/menuSelector';
 import Date from '../components/Date/Date';
-
+import MapContainer from '../containers/MapContainer';
 class App extends Component {
 
     render() {
@@ -28,6 +28,7 @@ class App extends Component {
                         }}>
                             Chlorophyll Image
                         </Layout.Title>
+                        <MapContainer/>
                     </Layout.Map>
                 </Layout.Main>
             </Layout>

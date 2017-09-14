@@ -54,7 +54,6 @@ Layout.Main = styled.div`
     ${media.desktop`
     `}
 
-
     ${media.tablet`
     `}
 
@@ -65,7 +64,8 @@ Layout.Main = styled.div`
 Layout.Map = styled.div`
     display: flex;
     background: ${oc.gray[3]};
-    flex-direction: row;
+    flex-direction: column;
+    height: 1000px;
     flex: 1;
     padding-bottom: inherit;
 `;
@@ -75,7 +75,7 @@ Layout.Option = styled.div`
     flex-shrink: 0;
     flex-direction: column;
     display: flex;
-    flex-basis: 300px;
+    flex-basis: 400px;
     padding-bottom: inherit;
     overflow: auto;
     border-right: 1px solid ${oc.gray[4]};

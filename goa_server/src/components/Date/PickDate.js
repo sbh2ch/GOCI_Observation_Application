@@ -18,6 +18,7 @@ const Wrapper = styled.div`
 const StyledSelectedDate = styled.a`
     padding-left: .3rem;
     padding-right: .8rem;
+    color: ${oc.gray[9]};
     font-weight: bold;
     font-size: 1.2rem;
     line-height: 1.5rem;
