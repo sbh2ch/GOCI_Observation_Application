@@ -7,6 +7,7 @@ import oc from 'open-color';
 import PropTypes from 'prop-types';
 import PickDate from './PickDate';
 import PickTime from './PickTime';
+import TypeSelector from "./TypeSelector";
 
 const Wrapper = styled.div`
     height: 102px;

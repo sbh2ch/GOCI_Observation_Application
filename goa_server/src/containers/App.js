@@ -4,6 +4,9 @@ import Layout from '../components/Layout';
 import MenuSelector from '../components/Menu/menuSelector';
 import Date from '../components/Option/Date';
 import MapContainer from '../containers/MapContainer';
+import TypeSelector from "../components/Option/TypeSelector";
+import ValueView from '../components/Option/ValueView';
+import Footer from '../components/Footer';
 class App extends Component {
 
     render() {
@@ -18,6 +21,9 @@ class App extends Component {
                             Real Time Satellite Image
                         </Layout.Title>
                         <Date/>
+                        <TypeSelector/>
+                        <ValueView/>
+                        <Footer/>
                     </Layout.Option>
                     <Layout.Map>
                         <Layout.Title style={{
