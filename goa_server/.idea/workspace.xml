@@ -12,23 +12,43 @@
   <component name="FileEditorManager">
     <splitter split-orientation="horizontal" split-proportion="0.39235294">
       <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="MapContainer.js" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/containers/MapContainer.js">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1241">
-                  <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#39#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
+        <splitter split-orientation="vertical" split-proportion="0.5">
+          <split-first>
+            <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+              <file leaf-file-name="MapContainer.js" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/containers/MapContainer.js">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="210">
+                      <caret line="22" column="25" lean-forward="true" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+                      <folding>
+                        <element signature="e#0#39#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-first>
+          <split-second>
+            <leaf>
+              <file leaf-file-name="MapContainer.js" pinned="false" current-in-tab="true">
+                <entry file="file://$PROJECT_DIR$/src/containers/MapContainer.js">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="350">
+                      <caret line="83" column="54" lean-forward="false" selection-start-line="83" selection-start-column="54" selection-end-line="83" selection-end-column="54" />
+                      <folding>
+                        <element signature="e#0#39#0" expanded="true" />
+                      </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+            </leaf>
+          </split-second>
+        </splitter>
       </split-first>
       <split-second>
-        <splitter split-orientation="vertical" split-proportion="0.11840796">
+        <splitter split-orientation="vertical" split-proportion="0.4791045">
           <split-first>
             <leaf>
               <file leaf-file-name="Date.js" pinned="false" current-in-tab="true">
@@ -71,7 +91,7 @@
               <file leaf-file-name="menuSelector.js" pinned="false" current-in-tab="false">
                 <entry file="file://$PROJECT_DIR$/src/components/Menu/menuSelector.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="844">
+                    <state relative-caret-position="993">
                       <caret line="63" column="1" lean-forward="false" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
                       <folding />
                     </state>
@@ -95,11 +115,21 @@
               <file leaf-file-name="ui.js" pinned="false" current-in-tab="true">
                 <entry file="file://$PROJECT_DIR$/src/modules/ui.js">
                   <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="315">
-                      <caret line="15" column="131" lean-forward="false" selection-start-line="15" selection-start-column="131" selection-end-line="15" selection-end-column="131" />
+                    <state relative-caret-position="422">
+                      <caret line="75" column="39" lean-forward="false" selection-start-line="75" selection-start-column="39" selection-end-line="75" selection-end-column="39" />
                       <folding>
                         <element signature="e#0#58#0" expanded="true" />
                       </folding>
+                    </state>
+                  </provider>
+                </entry>
+              </file>
+              <file leaf-file-name="web-api.js" pinned="false" current-in-tab="false">
+                <entry file="file://$PROJECT_DIR$/src/lib/web-api.js">
+                  <provider selected="true" editor-type-id="text-editor">
+                    <state relative-caret-position="63">
+                      <caret line="3" column="167" lean-forward="true" selection-start-line="3" selection-start-column="146" selection-end-line="3" selection-end-column="167" />
+                      <folding />
                     </state>
                   </provider>
                 </entry>
@@ -130,6 +160,9 @@
       <find>user</find>
       <find>changeInfo</find>
       <find>getLatLon</find>
+      <find>marker</find>
+      <find>addl</find>
+      <find>console</find>
     </findStrings>
     <replaceStrings>
       <replace>e8f7ff</replace>
@@ -144,7 +177,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/modules/product.js" />
-        <option value="$PROJECT_DIR$/src/modules/index.js" />
         <option value="$PROJECT_DIR$/src/store.js" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/node_modules/react-datepicker/dist/react-datepicker.css" />
@@ -174,8 +206,9 @@
         <option value="$PROJECT_DIR$/src/containers/App.js" />
         <option value="$PROJECT_DIR$/src/modules/value.js" />
         <option value="$PROJECT_DIR$/src/containers/OptionContainer.js" />
-        <option value="$PROJECT_DIR$/src/containers/MapContainer.js" />
+        <option value="$PROJECT_DIR$/src/modules/index.js" />
         <option value="$PROJECT_DIR$/src/modules/ui.js" />
+        <option value="$PROJECT_DIR$/src/containers/MapContainer.js" />
       </list>
     </option>
   </component>
@@ -785,12 +818,12 @@
       <workItem from="1505348052164" duration="18318000" />
       <workItem from="1505403308763" duration="9000" />
       <workItem from="1505403340389" duration="4368000" />
-      <workItem from="1505434450593" duration="32151000" />
+      <workItem from="1505434450593" duration="44463000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62495000" />
+    <option name="totallyTimeSpent" value="74807000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="3831" y="-9" width="3858" height="2178" extended-state="6" />
@@ -1103,14 +1136,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/store.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="11" column="21" lean-forward="true" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Layout.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
@@ -1128,14 +1153,6 @@
           <folding>
             <element signature="e#0#26#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/lib/web-api.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="84">
-          <caret line="4" column="0" lean-forward="true" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1159,24 +1176,6 @@
         <state relative-caret-position="231">
           <caret line="11" column="36" lean-forward="true" selection-start-line="11" selection-start-column="36" selection-end-line="11" selection-end-column="36" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Menu/menuSelector.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="844">
-          <caret line="63" column="1" lean-forward="false" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/Option/Date.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="22" column="14" lean-forward="true" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
-          <folding>
-            <element signature="e#52#78#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1219,14 +1218,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/modules/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/modules/value.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="63">
@@ -1243,22 +1234,66 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/modules/ui.js">
+    <entry file="file://$PROJECT_DIR$/src/modules/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="15" column="131" lean-forward="false" selection-start-line="15" selection-start-column="131" selection-end-line="15" selection-end-column="131" />
+        <state relative-caret-position="147">
+          <caret line="7" column="3" lean-forward="true" selection-start-line="7" selection-start-column="3" selection-end-line="7" selection-end-column="3" />
           <folding>
-            <element signature="e#0#58#0" expanded="true" />
+            <element signature="e#0#38#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/lib/web-api.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="63">
+          <caret line="3" column="167" lean-forward="true" selection-start-line="3" selection-start-column="146" selection-end-line="3" selection-end-column="167" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Menu/menuSelector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="993">
+          <caret line="63" column="1" lean-forward="false" selection-start-line="63" selection-start-column="1" selection-end-line="63" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Option/Date.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="22" column="14" lean-forward="true" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
+          <folding>
+            <element signature="e#52#78#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/store.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="11" column="21" lean-forward="true" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/containers/MapContainer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1241">
-          <caret line="160" column="0" lean-forward="true" selection-start-line="160" selection-start-column="0" selection-end-line="160" selection-end-column="0" />
+        <state relative-caret-position="210">
+          <caret line="22" column="25" lean-forward="true" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/modules/ui.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="422">
+          <caret line="75" column="39" lean-forward="false" selection-start-line="75" selection-start-column="39" selection-end-line="75" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
           </folding>
         </state>
       </provider>

@@ -5,22 +5,125 @@ import {connect} from 'react-redux';
 import * as uiActions from '../modules/ui';
 import {bindActionCreators} from 'redux';
 
+let map;
+let marker;
+let clickListener;
+
 class MapContainer extends Component {
+    static naver = window.naver;
+
+    onClickListener = (e) => {
+        marker.setPosition(e.point);
+        const {UIActions, values, year, month, day, time, type} = this.props;
+        const {value, lat} = values;
+
+        const getLatLon = async (arrX, arrY, zoom, posX, posY) => {
+            try {
+                await UIActions.getLatlon({arrX, arrY, zoom, posX, posY});
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const getValue = async (year, month, day, time, arrX, arrY, zoom, type, posX, posY) => {
+            try {
+                await UIActions.getValueArr({year, month, day, time, arrX, arrY, zoom, type, posX, posY});
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        const setValue = async (zoom, arrX, arrY, posX, posY) => {
+            try {
+                await UIActions.setValues({zoom, arrX, arrY, posX, posY});
+            } catch (e) {
+                console.log(e);
+            }
+        };
+
+        let fName = e.originalEvent.target.src;
+        if (fName.endsWith(".gif")) {
+            return;
+        }
+
+        fName = fName.split("/");
+        fName = fName[fName.length - 1].split(".")[0].split("-");
+        const zoom = map.getZoom();
+        const arrX = fName[0];
+        const arrY = fName[1];
+
+        let scope;
+        switch (zoom) {
+            case 3:
+                scope = 800;
+                if (arrX >= 6 || arrY >= 6)
+                    return;
+                break;
+            case 4:
+                scope = 400;
+                if (arrX >= 12 || arrY >= 12)
+                    return;
+                break;
+            case 5:
+                scope = 200;
+                if (arrX >= 25 || arrY >= 25)
+                    return;
+                break;
+            case 6:
+                scope = 100;
+                if (arrX >= 50 || arrY >= 50)
+                    return;
+                break;
+        }
+
+        const posX = parseInt(((e.coord.x * 32) % scope) / (scope / 100));
+        const posY = parseInt(((e.coord.y * 32) % scope) / (scope / 100));
+
+        if (value[zoom - 3][arrX][arrY] === undefined) {
+            if (lat[zoom - 3][arrX][arrY] === undefined) {
+                getLatLon(arrX, arrY, zoom, posX, posY);
+            }
+            getValue(year, month, day, time, arrX, arrY, zoom, type, posX, posY);
+        } else {
+            setValue(zoom, arrX, arrY, posX, posY);
+        }
+    };
+
+    componentWillReceiveProps(nextProps) {
+        const naver = window.naver;
+        const {isCrop, type} = nextProps;
+        if (this.props.type !== nextProps.type) {
+            naver.maps.Event.removeListener(clickListener);
+            if (type === 'RGB') {
+                console.log(marker);
+                marker.onRemove();
+                marker = undefined;
+            } else {
+                clickListener = naver.maps.Event.addListener(map, 'click', this.onClickListener);
+
+                if (marker === undefined) {
+                    marker = new naver.maps.Marker({
+                        icon: {
+                            url: 'assets/img/marker.png',
+                            size: new naver.maps.Size(25, 34),
+                            scaledSize: new naver.maps.Size(25, 34),
+                            origin: new naver.maps.Point(0, 0),
+                            anchor: new naver.maps.Point(12, 34)
+                        },
+                        position: new naver.maps.Point(62, 66.875),
+                        map: map
+                    });
+                }
+            }
+        }
+    }
+
     componentDidMount() {
         const $ = window.jQuery;
         const naver = window.naver;
         const mapDiv = document.getElementById('map');
-        const {year, month, day, time, isCrop, type, valueArr, latArr, lonArr} = this.props;
-
-        const zooms = [6, 12, 25, 50];
-        for (let i = 0; i < zooms.length; i++) {
-            for (let j = 0; j < zooms[i]; j++) {
-                valueArr[i][j] = new Array(zooms[i]);
-                latArr[i][j] = new Array(zooms[i]);
-                lonArr[i][j] = new Array(zooms[i]);
-            }
-        }
-
+        const {year, month, day, time, isCrop, type, values} = this.props;
+        const {value, lat, lon} = values;
 
         const tileSize = new naver.maps.Size(200, 200),
             proj = {
@@ -56,7 +159,7 @@ class MapContainer extends Component {
                 return new naver.maps.ImageMapType(mapTypeOption);
             };
 
-        const map = new naver.maps.Map(mapDiv, {
+        map = new naver.maps.Map(mapDiv, {
             center: new naver.maps.Point(75, 60),
             zoom: 3,
             minZoom: 3,
@@ -79,7 +182,6 @@ class MapContainer extends Component {
         });
 
         map.setCursor('pointer');
-
 
         var drawingManager = !isCrop ? null : new naver.maps.drawing.DrawingManager({
             map: map,
@@ -110,105 +212,6 @@ class MapContainer extends Component {
                 strokeColor: '#ff0000'
             }
         });
-
-        const marker = isCrop ? null : (type === 'RGB') ? null : new naver.maps.Marker({
-            icon: {
-                url: 'assets/img/marker.png',
-                size: new naver.maps.Size(25, 34),
-                scaledSize: new naver.maps.Size(25, 34),
-                origin: new naver.maps.Point(0, 0),
-                anchor: new naver.maps.Point(12, 34)
-            },
-            position: new naver.maps.Point(62, 66.875),
-            map: map
-        });
-
-
-        naver.maps.Event.addListener(map, 'click', function (e) {
-            marker.setPosition(e.point);
-
-
-            const getLatLon = async (arrX, arrY, zoom, posX, posY) => {
-                try {
-                    await axios.get('http://kosc.kr:8080/api/lonlat/' + arrX + '-' + arrY + '/' + zoom)
-                        .then(response => {
-                            console.log(response);
-                            // lonArr[zoom - 3][arrX][arrY] = response.data[0];
-                            // latArr[zoom - 3][arrX][arrY] = response.data[1];
-                            // console.log(lonArr[zoom - 3][arrX][arrY][posX][posY], latArr[zoom - 3][arrX][arrY][posX][posY]);
-                        });
-                } catch (e) {
-                    console.log(e);
-                }
-            };
-
-            // const getValue = async () => {
-            //     try {
-            //
-            //     }
-            // }
-
-            let fName = e.originalEvent.target.src;
-            if (fName.endsWith(".gif")) {
-                return;
-            }
-
-            fName = fName.split("/");
-            fName = fName[fName.length - 1].split(".")[0].split("-");
-            const zoom = map.getZoom();
-            const arrX = fName[0];
-            const arrY = fName[1];
-
-            let scope;
-            switch (zoom) {
-                case 3:
-                    scope = 800;
-                    if (arrX >= 6 || arrY >= 6)
-                        return;
-                    break;
-                case 4:
-                    scope = 400;
-                    if (arrX >= 12 || arrY >= 12)
-                        return;
-                    break;
-                case 5:
-                    scope = 200;
-                    if (arrX >= 25 || arrY >= 25)
-                        return;
-                    break;
-                case 6:
-                    scope = 100;
-                    if (arrX >= 50 || arrY >= 50)
-                        return;
-                    break;
-            }
-            const posX = parseInt(((e.coord.x * 32) % scope) / (scope / 100));
-            const posY = parseInt(((e.coord.y * 32) % scope) / (scope / 100));
-
-            if (valueArr[zoom - 3][arrX][arrY] === undefined) {
-                if (latArr[zoom - 3][arrX][arrY] === undefined) {
-                    getLatLon(arrX, arrY, zoom, posX, posY);
-
-
-                    // console.log(lonArr[zoom - 3][arrX][arrY][posX][posY], latArr[zoom - 3][arrX][arrY][posX][posY]);
-                }
-                // $.ajax({
-                //     url: '/api/' + state.year + '-' + state.month + '-' + state.day + '-' + state.time + '/' + arrX + '-' + arrY + '/' + zoom + '/' + map.getMapTypeId(),
-                //     method: 'GET',
-                //     dataType: 'JSON',
-                //     success: function (data) {
-                //         state.valueArr[zoom - 3][arrX][arrY] = data;
-                //         $("#result").html('value : ' + valueArr[zoom - 3][arrX][arrY][posX][posY] + '<br/>lon : ' + lonArr[zoom - 3][arrX][arrY][posX][posY] + '<br/>lat : ' + latArr[zoom - 3][arrX][arrY][posX][posY]);
-                //     },
-                //     error: function () {
-                //         alert('data load error occurred');
-                //     }
-                // });
-            } else {
-                console.log('else');
-                // $("#result").html('value : ' + valueArr[zoom - 3][arrX][arrY][posX][posY] + '<br/>lon : ' + lonArr[zoom - 3][arrX][arrY][posX][posY] + '<br/>lat : ' + latArr[zoom - 3][arrX][arrY][posX][posY]);
-            }
-        })
     }
 
     render() {
@@ -218,25 +221,15 @@ class MapContainer extends Component {
     };
 }
 
-MapContainer.defaultProps = {
-    year: 2017,
-    month: '09',
-    day: '10',
-    time: '07',
-    type: 'CHL',
-    isCrop: false,
-    valueArr: [new Array(6), new Array(12), new Array(25), new Array(50)],
-    latArr: [new Array(6), new Array(12), new Array(25), new Array(50)],
-    lonArr: [new Array(6), new Array(12), new Array(25), new Array(50)]
-};
-
 export default connect((state) => ({
         year: state.ui.getIn(['info', 'year']),
         month: state.ui.getIn(['info', 'month']),
         day: state.ui.getIn(['info', 'day']),
         time: state.ui.getIn(['info', 'time']),
         type: state.ui.getIn(['info', 'type']),
-        values: state.ui.get('values')
+        values: state.ui.get('values').toJS(),
+        zoom: state.ui.getIn(['info', 'zoom']),
+        isCrop: state.ui.get('isCrop')
     }), (dispatch) => ({
         UIActions: bindActionCreators(uiActions, dispatch)
     })
