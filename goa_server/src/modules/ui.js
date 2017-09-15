@@ -66,7 +66,11 @@ const initialState = Map({
 
 export default handleActions({
     [SET_OPTION]: (state, action) => state.set('option', action.payload),
-    [CHANGE_INFO]: (state, action) => state.setIn(['info', action.payload.name], action.payload.value).setIn(['values', 'value'], fromJS(valueReset())),
+    [CHANGE_INFO]: (state, action) => state.setIn(['info', action.payload.name], action.payload.value)
+        .setIn(['values', 'value'], fromJS(valueReset()))
+        .setIn(['info','selected','value'], '')
+        .setIn(['info','selected','lon'], '')
+        .setIn(['info','selected','lat'], ''),
     [TOGGLE_DATE]: (state) => state.set('isDatePickerOpen', !state.get('isDatePickerOpen')),
     [SET_VALUES]: (state, action) => {
         const {zoom, arrX, arrY, posX, posY} = action.payload;

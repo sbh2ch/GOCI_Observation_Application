@@ -24,7 +24,7 @@ class OptionContainer extends Component {
     render() {
         const {handleTimeChange, handleToggle} = this;
 
-        const {year, month, day, time, type, isDatePickerOpen, UIActions} = this.props;
+        const {year, month, day, time, type, isDatePickerOpen, UIActions, lon, lat, value} = this.props;
         return (
             <Option>
                 <Layout.Title style={{borderBottom: `1px solid #bcbcbc`}}>
@@ -39,7 +39,7 @@ class OptionContainer extends Component {
                     onTimeChange={handleTimeChange}
                     onToggle={handleToggle}/>
                 <TypeSelector type={type} onChange={handleTimeChange}/>
-                <ValueView/>
+                <ValueView type={type} selected={{lon, lat, value}}/>
                 <Footer/>
             </Option>
         )
@@ -53,8 +53,8 @@ export default connect((state) => ({
         time: state.ui.getIn(['info', 'time']),
         type: state.ui.getIn(['info', 'type']),
         lat: state.ui.getIn(['info', 'selected', 'lat']),
-        lon: state.ui.getIn(['info', 'type', 'lon']),
-        value: state.ui.getIn(['info', 'type', 'value']),
+        lon: state.ui.getIn(['info', 'selected', 'lon']),
+        value: state.ui.getIn(['info', 'selected', 'value']),
         option: state.ui.get('option'),
         isDatePickerOpen: state.ui.get('isDatePickerOpen')
     }), (dispatch) => ({

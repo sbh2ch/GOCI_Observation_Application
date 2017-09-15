@@ -52,21 +52,12 @@ const Value = ({children, value, type}) => (
     </StyledValue>
 );
 
-const ValueView = ({type, value}) => (
+const ValueView = ({type, selected}) => (
     <Wrapper>
-        <Value value={value.lon}>Latitude</Value>
-        <Value value={value.lat}>Longitude</Value>
-        <Value value={value.product} type={type}>Value</Value>
+        <Value value={selected.lat}>Latitude</Value>
+        <Value value={selected.lon}>Longitude</Value>
+        <Value value={selected.value} type={type}>Value</Value>
     </Wrapper>
 );
-
-ValueView.defaultProps = {
-    type: 'CDOM',
-    value: {
-        lon: 116.316650,
-        lat: 42.126848,
-        product: 0.221574
-    }
-};
 
 export default ValueView;
