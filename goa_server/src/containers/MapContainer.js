@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import Map from '../components/Map/Map';
+import axios from 'axios';
 import {connect} from 'react-redux';
+import * as uiActions from '../modules/ui';
+import {bindActionCreators} from 'redux';
 
 class MapContainer extends Component {
     componentDidMount() {
@@ -120,8 +123,30 @@ class MapContainer extends Component {
             map: map
         });
 
+
         naver.maps.Event.addListener(map, 'click', function (e) {
             marker.setPosition(e.point);
+
+
+            const getLatLon = async (arrX, arrY, zoom, posX, posY) => {
+                try {
+                    await axios.get('http://kosc.kr:8080/api/lonlat/' + arrX + '-' + arrY + '/' + zoom)
+                        .then(response => {
+                            console.log(response);
+                            // lonArr[zoom - 3][arrX][arrY] = response.data[0];
+                            // latArr[zoom - 3][arrX][arrY] = response.data[1];
+                            // console.log(lonArr[zoom - 3][arrX][arrY][posX][posY], latArr[zoom - 3][arrX][arrY][posX][posY]);
+                        });
+                } catch (e) {
+                    console.log(e);
+                }
+            };
+
+            // const getValue = async () => {
+            //     try {
+            //
+            //     }
+            // }
 
             let fName = e.originalEvent.target.src;
             if (fName.endsWith(".gif")) {
@@ -162,19 +187,11 @@ class MapContainer extends Component {
 
             if (valueArr[zoom - 3][arrX][arrY] === undefined) {
                 if (latArr[zoom - 3][arrX][arrY] === undefined) {
-                    $.ajax({
-                        url: 'http://kosc.kr:8080/api/lonlat/' + arrX + '-' + arrY + '/' + zoom,
-                        method: 'GET',
-                        async: false,
-                        dataType: 'JSON',
-                        success: function (lonlat) {
-                            console.log('success');
-                            lonArr[zoom - 3][arrX][arrY] = lonlat[0];
-                            latArr[zoom - 3][arrX][arrY] = lonlat[1];
-                        }
-                    });
+                    getLatLon(arrX, arrY, zoom, posX, posY);
+
+
+                    // console.log(lonArr[zoom - 3][arrX][arrY][posX][posY], latArr[zoom - 3][arrX][arrY][posX][posY]);
                 }
-                console.log('/api/' + year + '-' + month + '-' + day + '-' + time + '/' + arrX + '-' + arrY + '/' + zoom + '/' + map.getMapTypeId());
                 // $.ajax({
                 //     url: '/api/' + state.year + '-' + state.month + '-' + state.day + '-' + state.time + '/' + arrX + '-' + arrY + '/' + zoom + '/' + map.getMapTypeId(),
                 //     method: 'GET',
@@ -204,7 +221,7 @@ class MapContainer extends Component {
 MapContainer.defaultProps = {
     year: 2017,
     month: '09',
-    day: '03',
+    day: '10',
     time: '07',
     type: 'CHL',
     isCrop: false,
@@ -213,4 +230,14 @@ MapContainer.defaultProps = {
     lonArr: [new Array(6), new Array(12), new Array(25), new Array(50)]
 };
 
-export default MapContainer;
+export default connect((state) => ({
+        year: state.ui.getIn(['info', 'year']),
+        month: state.ui.getIn(['info', 'month']),
+        day: state.ui.getIn(['info', 'day']),
+        time: state.ui.getIn(['info', 'time']),
+        type: state.ui.getIn(['info', 'type']),
+        values: state.ui.get('values')
+    }), (dispatch) => ({
+        UIActions: bindActionCreators(uiActions, dispatch)
+    })
+)(MapContainer);

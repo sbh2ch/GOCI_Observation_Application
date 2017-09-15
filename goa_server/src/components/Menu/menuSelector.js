@@ -29,7 +29,7 @@ const StyledMenu = styled.div`
     color: ${oc.gray[1]};
     
     &:hover {
-        background: ${props => props.active ? oc.blue[9] :oc.gray[8]};
+        background: ${props => props.active ? oc.blue[9] : oc.gray[8]};
     }
 `;
 
@@ -60,8 +60,8 @@ class ItemSelector extends Component {
                     <CropIcon size={25}/>
                 </Item>
             </Wrapper>
-        )
-    }
+        );
+    };
 }
 
 ItemSelector.propTypes = {

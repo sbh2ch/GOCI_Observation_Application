@@ -17,16 +17,21 @@ const Wrapper = styled.div`
     border-bottom: 1px solid #bcbcbc;
 `;
 
-const Date = ({date, time}) => (
+const Date = ({year, month, day, time, isOpen, onToggle, onTimeChange}) => (
     <Wrapper>
-        <PickDate/>
-        <PickTime/>
+        <PickDate year={year} month={month} day={day} isOpen={isOpen} onTimeChange={onTimeChange} onToggle={onToggle}/>
+        <PickTime time={time} onTimeChange={onTimeChange}/>
     </Wrapper>
 );
 
 Date.propTypes = {
-    date: PropTypes.string,
-    time: PropTypes.string
+    year: PropTypes.string,
+    month: PropTypes.string,
+    day: PropTypes.string,
+    time: PropTypes.string,
+    onTimeChange: PropTypes.func,
+    isOpen: PropTypes.bool,
+    onToggle: PropTypes.func,
 };
 
 export default Date;

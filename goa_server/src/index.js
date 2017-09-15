@@ -12,11 +12,3 @@ ReactDOM.render(
     </Provider>
     , document.getElementById('root'));
 registerServiceWorker();
-
-function divResize() {
-    const main = document.getElementsByClassName('main');
-    console.dir(main);
-    main.style.height = window.innerHeight + 'px';
-}
-window.onload = function () {
-};
