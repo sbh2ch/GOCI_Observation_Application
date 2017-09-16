@@ -28,10 +28,11 @@ class OptionContainer extends Component {
         const {rectangle} = this.props;
         rectangle.setVisible(false);
         //todo step1단계 변경
+        //todo API서버 로직 변경 필요함. 영역선택 -> 산출물 생성 -> 다운로드
     };
 
     handleDownload = () => {
-
+        
     };
 
     handleTypeSelect = (name) => {

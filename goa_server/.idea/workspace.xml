@@ -17,8 +17,8 @@
           <file leaf-file-name="OptionContainer.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/containers/OptionContainer.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="5">
-                  <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+                <state relative-caret-position="324">
+                  <caret line="34" column="8" lean-forward="false" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
                   <folding>
                     <element signature="e#0#39#0" expanded="true" />
                   </folding>
@@ -164,7 +164,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="y" value="98" />
+    <option name="x" value="18" />
+    <option name="y" value="156" />
     <option name="width" value="1440" />
     <option name="height" value="873" />
   </component>
@@ -849,15 +850,15 @@
       <workItem from="1505403308763" duration="9000" />
       <workItem from="1505403340389" duration="4368000" />
       <workItem from="1505434450593" duration="45383000" />
-      <workItem from="1505519252885" duration="42392000" />
+      <workItem from="1505519252885" duration="42498000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="118119000" />
+    <option name="totallyTimeSpent" value="118225000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="98" width="1440" height="873" extended-state="0" />
+    <frame x="18" y="156" width="1440" height="873" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -1259,16 +1260,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/containers/OptionContainer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5">
-          <caret line="23" column="0" lean-forward="false" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/containers/MapContainer.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2070">
@@ -1285,6 +1276,16 @@
           <caret line="89" column="29" lean-forward="false" selection-start-line="89" selection-start-column="29" selection-end-line="89" selection-end-column="29" />
           <folding>
             <element signature="e#0#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/containers/OptionContainer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="34" column="8" lean-forward="false" selection-start-line="34" selection-start-column="8" selection-end-line="34" selection-end-column="8" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
           </folding>
         </state>
       </provider>
