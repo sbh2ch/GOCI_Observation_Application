@@ -32,7 +32,7 @@ class OptionContainer extends Component {
     };
 
     handleDownload = () => {
-        
+
     };
 
     handleTypeSelect = (name) => {

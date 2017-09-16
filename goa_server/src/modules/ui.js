@@ -69,6 +69,7 @@ const initialState = Map({
         step: 1,
         rectangle: null,
         cropType: 'he5',
+        link: ''
     }),
     map: null,
     tileSize: null,

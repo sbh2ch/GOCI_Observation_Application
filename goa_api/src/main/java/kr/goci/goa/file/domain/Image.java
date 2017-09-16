@@ -8,6 +8,9 @@ import java.util.Date;
 @Entity
 @Data
 public class Image {
+    public Image() {
+    }
+
     @Id
     @GeneratedValue
     private Long id;
