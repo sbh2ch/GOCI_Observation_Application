@@ -43,21 +43,36 @@ class PickDate extends Component {
     };
 
     handleChange = (date) => {
-        const {onTimeChange, onToggle} = this.props;
-        onTimeChange({name: 'year', value: date.format('YYYY')});
-        onTimeChange({name: 'month', value: date.format('MM')});
-        onTimeChange({name: 'day', value: date.format('DD')});
+        const {onTimeChange, onToggle, time, map, getMapType, type} = this.props;
+        const naver = window.naver;
+        const year = date.format('YYYY'),
+            month = date.format('MM'),
+            day = date.format('DD');
+
+
+        onTimeChange({name: 'year', value: year});
+        onTimeChange({name: 'month', value: month});
+        onTimeChange({name: 'day', value: day});
+
+        map.setOptions('mapTypes', new naver.maps.MapTypeRegistry({
+            'RGB': getMapType(type, year, month, day, time),
+        }));
 
         onToggle();
     };
 
     handleDayButton = (value) => {
-        const {onTimeChange, year, month, day} = this.props;
-        const beforeDay = moment(`${year}-${month}-${day}`).add(value, 'days');
+        const {onTimeChange, year, month, day, time, map, getMapType, type} = this.props;
+        const changedDay = moment(`${year}-${month}-${day}`).add(value, 'days');
+        const naver = window.naver;
 
-        onTimeChange({name: 'year', value: beforeDay.format('YYYY')});
-        onTimeChange({name: 'month', value: beforeDay.format('MM')});
-        onTimeChange({name: 'day', value: beforeDay.format('DD')});
+        onTimeChange({name: 'year', value: changedDay.format('YYYY')});
+        onTimeChange({name: 'month', value: changedDay.format('MM')});
+        onTimeChange({name: 'day', value: changedDay.format('DD')});
+
+        map.setOptions('mapTypes', new naver.maps.MapTypeRegistry({
+            'RGB': getMapType(type, changedDay.format('YYYY'), changedDay.format('MM'), changedDay.format('DD'), time),
+        }));
     };
 
     render() {
@@ -66,8 +81,16 @@ class PickDate extends Component {
 
         return (
             <Wrapper>
-                <LeftIcon size={25} className="date_icon" onClick={()=>{handleDayButton(-1)}}/>
-                <SelectedDate year={year} month={month} day={day}/>
+                <LeftIcon
+                    size={25}
+                    className="date_icon"
+                    onClick={() => {
+                        handleDayButton(-1)
+                    }}/>
+                <SelectedDate
+                    year={year}
+                    month={month}
+                    day={day}/>
                 <CalendarIcon
                     size={16}
                     className="date_icon"
@@ -84,13 +107,21 @@ class PickDate extends Component {
                         />
                     )
                 }
-                <RightIcon size={25} className="date_icon" onClick={()=>{handleDayButton(1)}}/>
+                <RightIcon
+                    size={25}
+                    className="date_icon"
+                    onClick={() => {
+                        handleDayButton(1)
+                    }}/>
             </Wrapper>
         );
     }
 }
 
 PickDate.propTypes = {
+    getMapType: PropTypes.func,
+    type: PropTypes.string,
+    map: PropTypes.object,
     year: PropTypes.string,
     month: PropTypes.string,
     day: PropTypes.string,

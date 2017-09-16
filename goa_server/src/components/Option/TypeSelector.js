@@ -22,18 +22,29 @@ class TypeSelector extends Component {
 
     static propTypes = {
         onChange: PropTypes.func,
-        value: PropTypes.string
+        value: PropTypes.string,
+        year: PropTypes.string,
+        month: PropTypes.string,
+        day: PropTypes.string,
+        time: PropTypes.string,
+        getMapType: PropTypes.func
     };
 
-    handleChange = (value) => {
-        const {onChange} = this.props;
-        onChange({name: 'type', value: value.value});
+    handleChange = (type) => {
+        const {onChange, year, month, day,map, time, getMapType} = this.props;
+        const naver = window.naver;
+        onChange({name: 'type', value: type.value});
+
+        map.setOptions('mapTypes', new naver.maps.MapTypeRegistry({
+            'RGB': getMapType(type.value, year, month, day, time)
+        }));
     };
 
     render() {
         return (
             <Wrapper>
                 <Select
+                    map={this.props.map}
                     placeholder="Type"
                     name="productType"
                     value={this.props.type}

@@ -21,25 +21,77 @@ class OptionContainer extends Component {
         toggleDate();
     };
 
-    render() {
-        const {handleTimeChange, handleToggle} = this;
+    getMapType = (type, year, month, day, time) => {
+        const $ = window.jQuery;
+        const naver = window.naver;
 
-        const {year, month, day, time, type, isDatePickerOpen, UIActions, lon, lat, value} = this.props;
+        const tileSize = new naver.maps.Size(200, 200);
+        const proj = {
+            fromCoordToPoint: function (coord) {
+                let pcoord = coord.clone();
+                if (coord instanceof naver.maps.LatLng) {
+                    pcoord = new naver.maps.Point(coord.lng(), coord.lat());
+                }
+                return pcoord.div(tileSize.width, tileSize.height);
+            },
+            fromPointToCoord: function (point) {
+                return point.clone().mul(tileSize.width, tileSize.height);
+            }
+        };
+
+        const commonOptions = {
+            name: '',
+            minZoom: 0,
+            maxZoom: 6,
+            tileSize: tileSize,
+            projection: proj,
+            repeatX: false,
+            tileSet: '',
+            vendor: 'KOSC',
+            uid: ''
+        };
+
+        const mapTypeOption = $.extend({}, commonOptions, {
+            name: type,
+            tileSet: `http://222.236.46.44/img/${year}/${month}/${day}/${time}/{z}/${type}/{x}-{y}.JPG`,
+            uid: ''
+        });
+
+        return new naver.maps.ImageMapType(mapTypeOption);
+    };
+
+    render() {
+        const {handleTimeChange, handleToggle, getMapType} = this;
+
+        const {year, map, month, day, time, type, isDatePickerOpen, UIActions, lon, lat, value} = this.props;
         return (
             <Option>
                 <Layout.Title style={{borderBottom: `1px solid #bcbcbc`}}>
                     Real Time Satellite Image
                 </Layout.Title>
                 <Date
+                    type={type}
+                    map={map}
                     year={year}
                     month={month}
                     day={day}
                     time={time}
                     isOpen={isDatePickerOpen}
+                    getMapType={getMapType}
                     onTimeChange={handleTimeChange}
                     onToggle={handleToggle}/>
-                <TypeSelector type={type} onChange={handleTimeChange}/>
-                <ValueView type={type} selected={{lon, lat, value}}/>
+                <TypeSelector
+                    map={map}
+                    year={year}
+                    month={month}
+                    day={day}
+                    time={time}
+                    type={type}
+                    getMapType={getMapType}
+                    onChange={handleTimeChange}/>
+                <ValueView
+                    type={type}
+                    selected={{lon, lat, value}}/>
                 <Footer/>
             </Option>
         )
@@ -47,6 +99,7 @@ class OptionContainer extends Component {
 }
 
 export default connect((state) => ({
+        map: state.ui.get('map'),
         year: state.ui.getIn(['info', 'year']),
         month: state.ui.getIn(['info', 'month']),
         day: state.ui.getIn(['info', 'day']),

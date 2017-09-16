@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 import MenuSelector from '../components/Menu/menuSelector';
 import MapContainer from '../containers/MapContainer';
 import OptionContainer from './OptionContainer';
-
+import {connect} from 'react-redux';
 
 class App extends Component {
 
@@ -23,7 +23,7 @@ class App extends Component {
                             background: '#373b46',
                             color: '#fefefe'
                         }}>
-                            Chlorophyll Image
+                            {this.props.type} Image
                         </Layout.Title>
                         <MapContainer/>
                     </Layout.Map>
@@ -33,4 +33,6 @@ class App extends Component {
     };
 }
 
-export default App;
+export default connect((state) => ({
+    type: state.ui.getIn(['info', 'type'])
+}))(App);

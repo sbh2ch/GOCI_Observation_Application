@@ -6,16 +6,15 @@ import {bindActionCreators} from 'redux';
 
 class MapContainer extends Component {
     state = {
-        map: null,
         marker: undefined,
         clickListener: null
     };
 
-    onClickListener = (e) => {
-        console.log('called');
+    onValueClickListener = (e) => {
         this.state.marker.setPosition(e.point);
         const {UIActions, values, year, month, day, time, type} = this.props;
         const {value, lat} = values;
+        const {map} = this.props;
 
         const getLatLon = async (arrX, arrY, zoom, posX, posY) => {
             try {
@@ -48,7 +47,7 @@ class MapContainer extends Component {
 
         fName = fName.split("/");
         fName = fName[fName.length - 1].split(".")[0].split("-");
-        const zoom = this.state.map.getZoom();
+        const zoom = map.getZoom();
         const arrX = fName[0];
         const arrY = fName[1];
 
@@ -92,7 +91,8 @@ class MapContainer extends Component {
     componentWillReceiveProps(nextProps) {
         const naver = window.naver;
         const {isCrop, type} = nextProps;
-        const {marker, map, clickListener} = this.state;
+        const {marker, clickListener} = this.state;
+        const {map} = this.props;
         if (this.props.type !== nextProps.type) {
             naver.maps.Event.removeListener(clickListener);
             if (type === 'RGB') {
@@ -101,7 +101,7 @@ class MapContainer extends Component {
                 this.setState({marker: undefined});
             } else {
                 map.setCursor('pointer');
-                this.setState({clickListener: naver.maps.Event.addListener(map, 'click', this.onClickListener)});
+                this.setState({clickListener: naver.maps.Event.addListener(map, 'click', this.onValueClickListener)});
 
                 if (marker === undefined) {
                     this.setState({
@@ -123,73 +123,67 @@ class MapContainer extends Component {
     }
 
     componentDidMount() {
-        const $ = window.jQuery;
         const naver = window.naver;
         const mapDiv = document.getElementById('map');
-        const {year, month, day, time, isCrop, type} = this.props;
+        const {year, month, day, time, isCrop, type, UIActions} = this.props;
 
-        const tileSize = new naver.maps.Size(200, 200),
-            proj = {
-                fromCoordToPoint: function (coord) {
-                    let pcoord = coord.clone();
-                    if (coord instanceof naver.maps.LatLng) {
-                        pcoord = new naver.maps.Point(coord.lng(), coord.lat());
-                    }
-                    return pcoord.div(tileSize.width, tileSize.height);
-                },
-                fromPointToCoord: function (point) {
-                    return point.clone().mul(tileSize.width, tileSize.height);
+        const tileSize = new naver.maps.Size(200, 200);
+        const proj = {
+            fromCoordToPoint: function (coord) {
+                let pcoord = coord.clone();
+                if (coord instanceof naver.maps.LatLng) {
+                    pcoord = new naver.maps.Point(coord.lng(), coord.lat());
                 }
+                return pcoord.div(tileSize.width, tileSize.height);
             },
-            getMapType = function (type) {
-                const commonOptions = {
-                        name: '',
-                        minZoom: 0,
-                        maxZoom: 6,
-                        tileSize: tileSize,
-                        projection: proj,
-                        repeatX: false,
-                        tileSet: '',
-                        vendor: 'KOSC',
-                        uid: ''
-                    },
-                    mapTypeOption = $.extend({}, commonOptions, {
-                        name: type,
-                        tileSet: 'http://222.236.46.44/img/{year}/{month}/{day}/{time}/{z}/{type}/{x}-{y}.JPG'.replace('{type}', type.toUpperCase()).replace('{year}', year).replace('{month}', month).replace('{day}', day).replace('{time}', time),
-                        uid: ''
-                    });
-
-                return new naver.maps.ImageMapType(mapTypeOption);
-            };
-
-        this.setState({
-            map: new naver.maps.Map(mapDiv, {
-                center: new naver.maps.Point(75, 60),
-                zoom: 3,
-                minZoom: 3,
-                background: '#000000',
-                logoControl: false,
-                mapTypes: new naver.maps.MapTypeRegistry({
-                    'RGB': getMapType('RGB'),
-                    'CDOM': getMapType('CDOM'),
-                    'TSS': getMapType('TSS'),
-                    'CHL': getMapType('CHL')
-                }),
-                mapTypeId: 'RGB',
-                mapTypeControl: true,
-                mapTypeControlOptions: {
-                    position: naver.maps.Position.TOP_RIGHT,
-                    style: naver.maps.MapTypeControlStyle.DROPDOWN
+            fromPointToCoord: function (point) {
+                return point.clone().mul(tileSize.width, tileSize.height);
+            }
+        };
+        const getMapType = function (type, year, month, day, time) {
+            const $ = window.jQuery;
+            const commonOptions = {
+                    name: '',
+                    minZoom: 0,
+                    maxZoom: 6,
+                    tileSize: tileSize,
+                    projection: proj,
+                    repeatX: false,
+                    tileSet: '',
+                    vendor: 'KOSC',
+                    uid: ''
                 },
-                disableDoubleClickZoom: true,
-                disableDoubleTapZoom: true
-            })
-        });
+                mapTypeOption = $.extend({}, commonOptions, {
+                    name: type,
+                    tileSet: `http://222.236.46.44/img/${year}/${month}/${day}/${time}/{z}/${type}/{x}-{y}.JPG`,
+                    uid: ''
+                });
 
-        // this.state.map.setCursor('pointer');
+            return new naver.maps.ImageMapType(mapTypeOption);
+        };
+
+        UIActions.setMap(new naver.maps.Map(mapDiv, {
+            center: new naver.maps.Point(75, 60),
+            zoom: 3,
+            minZoom: 3,
+            background: '#000000',
+            logoControl: false,
+            mapTypes: new naver.maps.MapTypeRegistry({
+                'RGB': getMapType(type, year, month, day, time),
+            }),
+            mapTypeId: 'RGB',
+            darktheme: false,
+            mapTypeControl: false,
+            mapTypeControlOptions: {
+                position: naver.maps.Position.TOP_RIGHT,
+                style: naver.maps.MapTypeControlStyle.DROPDOWN
+            },
+            disableDoubleClickZoom: true,
+            disableDoubleTapZoom: true
+        }));
 
         var drawingManager = !isCrop ? null : new naver.maps.drawing.DrawingManager({
-            map: this.state.map,
+            map: this.props.map,
             drawingControl: [naver.maps.drawing.DrawingMode.RECTANGLE],
             drawingControlOptions: {
                 position: naver.maps.Position.TOP_LEFT,
@@ -227,6 +221,7 @@ class MapContainer extends Component {
 }
 
 export default connect((state) => ({
+        map: state.ui.get('map'),
         year: state.ui.getIn(['info', 'year']),
         month: state.ui.getIn(['info', 'month']),
         day: state.ui.getIn(['info', 'day']),

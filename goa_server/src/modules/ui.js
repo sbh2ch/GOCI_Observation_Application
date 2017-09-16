@@ -3,6 +3,8 @@ import {Map, List, fromJS} from 'immutable';
 import {pender} from 'redux-pender';
 import * as WebAPI from '../lib/web-api';
 
+//todo SET_MAP, OPTION, TILESIZE 통합
+const SET_MAP = 'ui/SET_MAP';
 const SET_OPTION = 'ui/SET_OPTION';
 const CHANGE_INFO = 'ui/CHANGE_INFO';
 const TOGGLE_DATE = 'ui/TOGGLE_DATE';
@@ -16,7 +18,8 @@ export const changeInfo = createAction(CHANGE_INFO); // { name, value }
 export const toggleDate = createAction(TOGGLE_DATE);
 export const getLatlon = createAction(GET_LATLON, WebAPI.getLatLon, payload => payload); // { data, status, meta: {arrX, arrY, zoom} }
 export const getValueArr = createAction(GET_VALUE, WebAPI.getValue, payload => payload);
-export const setValues = createAction(SET_VALUES); // {zoom, arrX, arrY, posX, posY}
+export const setValues = createAction(SET_VALUES); // {zoom, arrX, arrY, posX, posY};
+export const setMap = createAction(SET_MAP);
 
 const generate = () => {
     const value = [new Array(6), new Array(12), new Array(25), new Array(50)];
@@ -59,18 +62,21 @@ const initialState = Map({
             value: ''
         })
     }),
+    map: null,
+    tileSize: null,
     isCrop: false,
     isDatePickerOpen: false,
     values: fromJS(generate())
 });
 
 export default handleActions({
+    [SET_MAP]: (state, action) => state.set('map', action.payload),
     [SET_OPTION]: (state, action) => state.set('option', action.payload),
     [CHANGE_INFO]: (state, action) => state.setIn(['info', action.payload.name], action.payload.value)
         .setIn(['values', 'value'], fromJS(valueReset()))
-        .setIn(['info','selected','value'], '')
-        .setIn(['info','selected','lon'], '')
-        .setIn(['info','selected','lat'], ''),
+        .setIn(['info', 'selected', 'value'], '')
+        .setIn(['info', 'selected', 'lon'], '')
+        .setIn(['info', 'selected', 'lat'], ''),
     [TOGGLE_DATE]: (state) => state.set('isDatePickerOpen', !state.get('isDatePickerOpen')),
     [SET_VALUES]: (state, action) => {
         const {zoom, arrX, arrY, posX, posY} = action.payload;

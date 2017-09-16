@@ -45,8 +45,14 @@ const TimeButton = ({isSelect, children, handleChange}) => (
 
 class PickTime extends Component {
     handleChange = (value) => {
-        const {onTimeChange} = this.props;
-        onTimeChange({name: 'time', value: `0${value}`});
+        const {onTimeChange, year, type, month, day, map, getMapType} = this.props;
+        const time = `0${value}`;
+        const naver = window.naver;
+        onTimeChange({name: 'time', value: time});
+
+        map.setOptions('mapTypes', new naver.maps.MapTypeRegistry({
+            'RGB': getMapType(type, year, month, day, time),
+        }));
     };
 
     render() {
