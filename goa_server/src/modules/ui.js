@@ -11,8 +11,10 @@ const TOGGLE_DATE = 'ui/TOGGLE_DATE';
 const GET_LATLON = 'value/GET_LATLON';
 const GET_VALUE = 'value/GET_VALUE';
 const SET_VALUES = 'value/SET_VALUES';
+const SET_MENU = 'value/SET_MENU';
+const SET_CROP_TYPE = 'crop/SET_CROP_TYPE';
 
-
+export const setMenu = createAction(SET_MENU);
 export const setOption = createAction(SET_OPTION); // { type }
 export const changeInfo = createAction(CHANGE_INFO); // { name, value }
 export const toggleDate = createAction(TOGGLE_DATE);
@@ -20,6 +22,7 @@ export const getLatlon = createAction(GET_LATLON, WebAPI.getLatLon, payload => p
 export const getValueArr = createAction(GET_VALUE, WebAPI.getValue, payload => payload);
 export const setValues = createAction(SET_VALUES); // {zoom, arrX, arrY, posX, posY};
 export const setMap = createAction(SET_MAP);
+export const setCropType = createAction(SET_CROP_TYPE); // {type}
 
 const generate = () => {
     const value = [new Array(6), new Array(12), new Array(25), new Array(50)];
@@ -62,15 +65,35 @@ const initialState = Map({
             value: ''
         })
     }),
+    crop: Map({
+        step: 1,
+        rectangle: null,
+        cropType: 'he5',
+    }),
     map: null,
     tileSize: null,
-    isCrop: false,
+    mode: 'value',
+    isCropBoxMade: false,
     isDatePickerOpen: false,
     values: fromJS(generate())
 });
 
 export default handleActions({
-    [SET_MAP]: (state, action) => state.set('map', action.payload),
+    [SET_CROP_TYPE]: (state, action) => state.setIn(['crop', 'cropType'], action.payload),
+    [SET_MAP]: (state, action) => {
+        const naver = window.naver;
+
+        return state.set('map', action.payload).setIn(['crop', 'rectangle'], new naver.maps.Rectangle({
+            map: action.payload,
+            bounds: [45.6195858, 67.1928595, 66.5689034, 87.8594302],
+            fillColor: '#00bf46',
+            fillOpacity: 0.4,
+            strokeWeight: 2,
+            strokeColor: '#00bf46',
+            visible: false,
+        }));
+    },
+    [SET_MENU]: (state, action) => state.set('mode', action.payload),
     [SET_OPTION]: (state, action) => state.set('option', action.payload),
     [CHANGE_INFO]: (state, action) => state.setIn(['info', action.payload.name], action.payload.value)
         .setIn(['values', 'value'], fromJS(valueReset()))

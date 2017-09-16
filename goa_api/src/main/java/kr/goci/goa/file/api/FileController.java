@@ -41,6 +41,7 @@ public class FileController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    //사진 띄워주는 역할
     @GetMapping("/api/images/hashes/{hashcode}")
     public ResponseEntity displayImage(@PathVariable String hashcode) {
         byte[] image;
@@ -60,6 +61,16 @@ public class FileController {
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
+    @PostMapping(value = "/api/temp/products", produces = "application/json;charset=UTF-8")
+    public ResponseEntity tempProduct(@RequestBody ImageDto.Temp temp){
+        ProductDto.Response res;
+
+
+
+        return null;
+    }
+
+    // 사진 만들기
     @PostMapping(value = "/api/images", produces = "application/json;charset=UTF-8")
     public ResponseEntity makeImage(@RequestBody ImageDto.Create image) {
 
@@ -105,6 +116,7 @@ public class FileController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    //다운로드
     @GetMapping(value = "/api/products/hashes/{hash}")
     public ResponseEntity getProduct(@PathVariable String hash, HttpServletRequest request) {
         File file = fileService.downloadProduct(hash);

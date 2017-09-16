@@ -8,8 +8,38 @@ import Date from '../components/Option/Date';
 import TypeSelector from "../components/Option/TypeSelector";
 import ValueView from '../components/Option/ValueView';
 import Footer from '../components/Footer';
+import Dimmed from '../components/Dimmed';
+import Spinner from '../components/Spinner';
+import CropView from '../components/Option/CropView';
 
 class OptionContainer extends Component {
+    handleCreateCropBox = () => {
+        const {rectangle} = this.props;
+        rectangle.setVisible(!rectangle.getVisible());
+        rectangle.setEditable(true);
+        //todo step2단계 변경
+    };
+
+    handleCreateProduct = () => {
+
+    };
+
+    handleCancelProduct = () => {
+        const {rectangle} = this.props;
+        rectangle.setVisible(false);
+        //todo step1단계 변경
+    };
+
+    handleDownload = () => {
+
+    };
+
+    handleTypeSelect = (name) => {
+        const {setCropType} = this.props.UIActions;
+
+        setCropType(name);
+    };
+
     handleTimeChange = (val) => {
         const {changeInfo} = this.props.UIActions;
 
@@ -60,12 +90,15 @@ class OptionContainer extends Component {
         return new naver.maps.ImageMapType(mapTypeOption);
     };
 
-    render() {
-        const {handleTimeChange, handleToggle, getMapType} = this;
 
-        const {year, map, month, day, time, type, isDatePickerOpen, UIActions, lon, lat, value} = this.props;
+    render() {
+        const {handleTypeSelect, handleTimeChange, handleToggle, getMapType, handleCreateCropBox} = this;
+
+        const {cropType, mode, year, map, step, month, day, time, pending, type, isDatePickerOpen, UIActions, lon, lat, value} = this.props;
         return (
             <Option>
+                <Dimmed visible={pending['value/GET_VALUE'] || pending['value/GET_LATLON']}/>
+                <Spinner visible={pending['value/GET_VALUE'] || pending['value/GET_LATLON']}/>
                 <Layout.Title style={{borderBottom: `1px solid #bcbcbc`}}>
                     Real Time Satellite Image
                 </Layout.Title>
@@ -89,9 +122,20 @@ class OptionContainer extends Component {
                     type={type}
                     getMapType={getMapType}
                     onChange={handleTimeChange}/>
-                <ValueView
-                    type={type}
-                    selected={{lon, lat, value}}/>
+
+                {
+                    mode === 'value' ?
+                        <ValueView
+                            type={type}
+                            selected={{lon, lat, value}}/> :
+                        <CropView
+                            handleCreateCropBox={handleCreateCropBox}
+                            type={type}
+                            handleTypeSelect={handleTypeSelect}
+                            cropType={cropType}
+                            step={step}/>
+                }
+
                 <Footer/>
             </Option>
         )
@@ -99,6 +143,12 @@ class OptionContainer extends Component {
 }
 
 export default connect((state) => ({
+        cropType: state.ui.getIn(['crop', 'cropType']),
+        drawingManager: state.ui.get('drawingManager'),
+        rectangle: state.ui.getIn(['crop', 'rectangle']),
+        pending: state.pender.pending,
+        step: state.ui.getIn(['crop', 'step']),
+        mode: state.ui.get('mode'),
         map: state.ui.get('map'),
         year: state.ui.getIn(['info', 'year']),
         month: state.ui.getIn(['info', 'month']),

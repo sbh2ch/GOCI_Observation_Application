@@ -41,7 +41,14 @@ class MapContainer extends Component {
         };
 
         let fName = e.originalEvent.target.src;
-        if (fName.endsWith(".gif")) {
+
+        try {
+            if (fName.endsWith(".gif")) {
+                return;
+            }
+
+        } catch (e) {
+            console.warn(e);
             return;
         }
 
@@ -88,44 +95,79 @@ class MapContainer extends Component {
         }
     };
 
+    setUpListenerAndMarker = () => {
+        const naver = window.naver;
+        const {map} = this.props;
+        const {marker} = this.state;
+
+        this.setState({clickListener: naver.maps.Event.addListener(map, 'click', this.onValueClickListener)});
+        this.setState({
+            marker: new naver.maps.Marker({
+                icon: {
+                    url: 'assets/img/marker.png',
+                    size: new naver.maps.Size(25, 34),
+                    scaledSize: new naver.maps.Size(25, 34),
+                    origin: new naver.maps.Point(0, 0),
+                    anchor: new naver.maps.Point(12, 34)
+                },
+                position: new naver.maps.Point(62, 66.875),
+                map: map
+            })
+        });
+    };
+
     componentWillReceiveProps(nextProps) {
         const naver = window.naver;
-        const {isCrop, type} = nextProps;
+        const {type} = nextProps;
         const {marker, clickListener} = this.state;
-        const {map} = this.props;
+        const {map, rectangle} = this.props;
+
+
+        // todo 이벤트 처리 차후 리펙토링 필요함. (더럽더럽)
+        if (nextProps.mode !== this.props.mode) {
+            if (nextProps.mode === 'crop') {
+                if (this.props.type === 'RGB')
+                    return;
+
+                if (marker !== undefined)
+                    marker.onRemove();
+
+                this.setState({marker: undefined});
+                naver.maps.Event.removeListener(clickListener);
+            } else {
+                rectangle.setVisible(false);
+                //todo 1step으로 변경
+
+                if (nextProps.type !== 'RGB') {
+                    this.setUpListenerAndMarker();
+                }
+            }
+        }
+
         if (this.props.type !== nextProps.type) {
             naver.maps.Event.removeListener(clickListener);
             if (type === 'RGB') {
                 map.setCursor('auto');
-                marker.onRemove();
+
+                if (marker !== undefined)
+                    marker.onRemove();
+
                 this.setState({marker: undefined});
             } else {
-                map.setCursor('pointer');
-                this.setState({clickListener: naver.maps.Event.addListener(map, 'click', this.onValueClickListener)});
-
-                if (marker === undefined) {
-                    this.setState({
-                        marker: new naver.maps.Marker({
-                            icon: {
-                                url: 'assets/img/marker.png',
-                                size: new naver.maps.Size(25, 34),
-                                scaledSize: new naver.maps.Size(25, 34),
-                                origin: new naver.maps.Point(0, 0),
-                                anchor: new naver.maps.Point(12, 34)
-                            },
-                            position: new naver.maps.Point(62, 66.875),
-                            map: map
-                        })
-                    });
+                if (nextProps.mode !== 'crop') {
+                    map.setCursor('pointer');
+                    this.setUpListenerAndMarker();
                 }
             }
         }
     }
 
+
     componentDidMount() {
+        console.log('componentDidMount');
         const naver = window.naver;
         const mapDiv = document.getElementById('map');
-        const {year, month, day, time, isCrop, type, UIActions} = this.props;
+        const {year, map, month, day, time, type, UIActions} = this.props;
 
         const tileSize = new naver.maps.Size(200, 200);
         const proj = {
@@ -163,7 +205,7 @@ class MapContainer extends Component {
         };
 
         UIActions.setMap(new naver.maps.Map(mapDiv, {
-            center: new naver.maps.Point(75, 60),
+            center: new naver.maps.Point(75, 75),
             zoom: 3,
             minZoom: 3,
             background: '#000000',
@@ -172,45 +214,9 @@ class MapContainer extends Component {
                 'RGB': getMapType(type, year, month, day, time),
             }),
             mapTypeId: 'RGB',
-            darktheme: false,
-            mapTypeControl: false,
-            mapTypeControlOptions: {
-                position: naver.maps.Position.TOP_RIGHT,
-                style: naver.maps.MapTypeControlStyle.DROPDOWN
-            },
             disableDoubleClickZoom: true,
             disableDoubleTapZoom: true
         }));
-
-        var drawingManager = !isCrop ? null : new naver.maps.drawing.DrawingManager({
-            map: this.props.map,
-            drawingControl: [naver.maps.drawing.DrawingMode.RECTANGLE],
-            drawingControlOptions: {
-                position: naver.maps.Position.TOP_LEFT,
-                style: naver.maps.drawing.DrawingStyle.HORIZONTAL
-            },
-            controlPointOptions: {
-                anchorPointOptions: {
-                    radius: 5,
-                    fillColor: '#ff0000',
-                    strokeColor: '#ff0000',
-                    strokeWeight: 1
-                },
-                midPointOptions: {
-                    radius: 4,
-                    fillColor: '#ff0000',
-                    strokeColor: '#ffffff',
-                    strokeWeight: 2,
-                    fillOpacity: 0.3
-                }
-            },
-            rectangleOptions: {
-                fillColor: '#ff0000',
-                fillOpacity: 0.3,
-                strokeWeight: 3,
-                strokeColor: '#ff0000'
-            }
-        });
     }
 
     render() {
@@ -221,6 +227,9 @@ class MapContainer extends Component {
 }
 
 export default connect((state) => ({
+        rectangle: state.ui.getIn(['crop', 'rectangle']),
+        isCropBoxMade: state.ui.get('isCropBoxMade'),
+        mode: state.ui.get('mode'),
         map: state.ui.get('map'),
         year: state.ui.getIn(['info', 'year']),
         month: state.ui.getIn(['info', 'month']),
@@ -229,7 +238,7 @@ export default connect((state) => ({
         type: state.ui.getIn(['info', 'type']),
         values: state.ui.get('values').toJS(),
         zoom: state.ui.getIn(['info', 'zoom']),
-        isCrop: state.ui.get('isCrop')
+        cropMode: state.ui.get('cropMode')
     }), (dispatch) => ({
         UIActions: bindActionCreators(uiActions, dispatch)
     })

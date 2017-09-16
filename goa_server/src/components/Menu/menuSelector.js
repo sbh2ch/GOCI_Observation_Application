@@ -37,8 +37,8 @@ StyledMenu.propTypes = {
     active: PropTypes.bool
 };
 
-const Item = ({children, selected, name}) => (
-    <StyledMenu active={selected === name}>
+const Item = ({children, selected, name, handleClick}) => (
+    <StyledMenu active={selected === name} onClick={()=>handleClick(selected, name)}>
         {children}
     </StyledMenu>
 );
@@ -46,17 +46,18 @@ const Item = ({children, selected, name}) => (
 Item.propTypes = {
     selected: PropTypes.string,
     name: PropTypes.string,
+    handleClick: PropTypes.func
 };
 
-class ItemSelector extends Component {
+class menuSelector extends Component {
     render() {
-        const {selected} = this.props;
+        const {mode, handleMenuClick} = this.props;
         return (
             <Wrapper>
-                <Item selected='crop' name='pointer'>
+                <Item selected={mode} name="value" handleClick={handleMenuClick}>
                     <MarkerIcon size={25}/>
                 </Item>
-                <Item selected='crop' name='crop'>
+                <Item selected={mode} name="crop" handleClick={handleMenuClick}>
                     <CropIcon size={25}/>
                 </Item>
             </Wrapper>
@@ -64,8 +65,9 @@ class ItemSelector extends Component {
     };
 }
 
-ItemSelector.propTypes = {
-    selected: PropTypes.string
+menuSelector.propTypes = {
+    mode: PropTypes.string,
+    handleMenuClick: PropTypes.func
 };
 
-export default ItemSelector;
+export default menuSelector;
