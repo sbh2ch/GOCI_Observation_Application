@@ -1,19 +1,19 @@
 import React, {Component} from 'react';
 import Map from '../components/Map/Map';
-import axios from 'axios';
 import {connect} from 'react-redux';
 import * as uiActions from '../modules/ui';
 import {bindActionCreators} from 'redux';
 
-let map;
-let marker;
-let clickListener;
-
 class MapContainer extends Component {
-    static naver = window.naver;
+    state = {
+        map: null,
+        marker: undefined,
+        clickListener: null
+    };
 
     onClickListener = (e) => {
-        marker.setPosition(e.point);
+        console.log('called');
+        this.state.marker.setPosition(e.point);
         const {UIActions, values, year, month, day, time, type} = this.props;
         const {value, lat} = values;
 
@@ -48,7 +48,7 @@ class MapContainer extends Component {
 
         fName = fName.split("/");
         fName = fName[fName.length - 1].split(".")[0].split("-");
-        const zoom = map.getZoom();
+        const zoom = this.state.map.getZoom();
         const arrX = fName[0];
         const arrY = fName[1];
 
@@ -92,26 +92,30 @@ class MapContainer extends Component {
     componentWillReceiveProps(nextProps) {
         const naver = window.naver;
         const {isCrop, type} = nextProps;
+        const {marker, map, clickListener} = this.state;
         if (this.props.type !== nextProps.type) {
             naver.maps.Event.removeListener(clickListener);
             if (type === 'RGB') {
-                console.log(marker);
+                map.setCursor('auto');
                 marker.onRemove();
-                marker = undefined;
+                this.setState({marker: undefined});
             } else {
-                clickListener = naver.maps.Event.addListener(map, 'click', this.onClickListener);
+                map.setCursor('pointer');
+                this.setState({clickListener: naver.maps.Event.addListener(map, 'click', this.onClickListener)});
 
                 if (marker === undefined) {
-                    marker = new naver.maps.Marker({
-                        icon: {
-                            url: 'assets/img/marker.png',
-                            size: new naver.maps.Size(25, 34),
-                            scaledSize: new naver.maps.Size(25, 34),
-                            origin: new naver.maps.Point(0, 0),
-                            anchor: new naver.maps.Point(12, 34)
-                        },
-                        position: new naver.maps.Point(62, 66.875),
-                        map: map
+                    this.setState({
+                        marker: new naver.maps.Marker({
+                            icon: {
+                                url: 'assets/img/marker.png',
+                                size: new naver.maps.Size(25, 34),
+                                scaledSize: new naver.maps.Size(25, 34),
+                                origin: new naver.maps.Point(0, 0),
+                                anchor: new naver.maps.Point(12, 34)
+                            },
+                            position: new naver.maps.Point(62, 66.875),
+                            map: map
+                        })
                     });
                 }
             }
@@ -122,8 +126,7 @@ class MapContainer extends Component {
         const $ = window.jQuery;
         const naver = window.naver;
         const mapDiv = document.getElementById('map');
-        const {year, month, day, time, isCrop, type, values} = this.props;
-        const {value, lat, lon} = values;
+        const {year, month, day, time, isCrop, type} = this.props;
 
         const tileSize = new naver.maps.Size(200, 200),
             proj = {
@@ -159,32 +162,34 @@ class MapContainer extends Component {
                 return new naver.maps.ImageMapType(mapTypeOption);
             };
 
-        map = new naver.maps.Map(mapDiv, {
-            center: new naver.maps.Point(75, 60),
-            zoom: 3,
-            minZoom: 3,
-            background: '#000000',
-            logoControl: false,
-            mapTypes: new naver.maps.MapTypeRegistry({
-                'RGB': getMapType('RGB'),
-                'CDOM': getMapType('CDOM'),
-                'TSS': getMapType('TSS'),
-                'CHL': getMapType('CHL')
-            }),
-            mapTypeId: 'RGB',
-            mapTypeControl: true,
-            mapTypeControlOptions: {
-                position: naver.maps.Position.TOP_RIGHT,
-                style: naver.maps.MapTypeControlStyle.DROPDOWN
-            },
-            disableDoubleClickZoom: true,
-            disableDoubleTapZoom: true
+        this.setState({
+            map: new naver.maps.Map(mapDiv, {
+                center: new naver.maps.Point(75, 60),
+                zoom: 3,
+                minZoom: 3,
+                background: '#000000',
+                logoControl: false,
+                mapTypes: new naver.maps.MapTypeRegistry({
+                    'RGB': getMapType('RGB'),
+                    'CDOM': getMapType('CDOM'),
+                    'TSS': getMapType('TSS'),
+                    'CHL': getMapType('CHL')
+                }),
+                mapTypeId: 'RGB',
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    position: naver.maps.Position.TOP_RIGHT,
+                    style: naver.maps.MapTypeControlStyle.DROPDOWN
+                },
+                disableDoubleClickZoom: true,
+                disableDoubleTapZoom: true
+            })
         });
 
-        map.setCursor('pointer');
+        // this.state.map.setCursor('pointer');
 
         var drawingManager = !isCrop ? null : new naver.maps.drawing.DrawingManager({
-            map: map,
+            map: this.state.map,
             drawingControl: [naver.maps.drawing.DrawingMode.RECTANGLE],
             drawingControlOptions: {
                 position: naver.maps.Position.TOP_LEFT,
