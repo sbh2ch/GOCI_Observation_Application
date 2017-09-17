@@ -1,2 +1,2 @@
 # GOA Front Server
-> React.js, Redux, node.js
+> React.js, Redux, node.js, etc...
