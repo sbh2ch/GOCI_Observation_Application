@@ -37,6 +37,8 @@ GOA is a single page app implemented using Spring boot, data JPA, hateoas, React
 
 
 ## Scripts
+
+### API
 - `cd goa_api`
 - `mvn spring-boot:start`
 
