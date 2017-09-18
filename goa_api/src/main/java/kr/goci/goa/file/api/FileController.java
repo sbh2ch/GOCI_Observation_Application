@@ -84,8 +84,17 @@ public class FileController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @PostMapping(value = "/api/products", produces = "appication/json;charset=UTF-8")
+    @PostMapping(value = "/api/products", produces = "application/json;charset=UTF-8")
     public ResponseEntity makeProduct(@RequestBody ProductDto.Create product) {
+        ProductDto.Response res;
+
+
+
+        return null;
+    }
+
+    @PostMapping(value = "/api/products", produces = "application/json;charset=UTF-8")
+    public ResponseEntity makeProducts(@RequestBody ProductDto.Create product) {
         ProductDto.Response res;
         try {
             res = fileService.makeProduct(product);

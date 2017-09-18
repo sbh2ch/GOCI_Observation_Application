@@ -21,7 +21,7 @@ class OptionContainer extends Component {
     };
 
     handleCreateProduct = () => {
-
+        
     };
 
     handleCancelProduct = () => {
@@ -32,7 +32,7 @@ class OptionContainer extends Component {
     };
 
     handleDownload = () => {
-
+        //
     };
 
     handleTypeSelect = (name) => {

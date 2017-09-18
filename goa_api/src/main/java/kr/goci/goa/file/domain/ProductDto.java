@@ -10,7 +10,11 @@ public class ProductDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Create {
-        private String hashcode;
+        private int startX;
+        private int startY;
+        private int endX;
+        private int endY;
+        private String type;
         private String outputType;
     }
 
