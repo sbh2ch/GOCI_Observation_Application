@@ -127,9 +127,9 @@ public class FileController {
 //        return new ResponseEntity<>(result, HttpStatus.CREATED);
 //    }
 
-    @GetMapping(value = "/api/products/hashes/{hash}")
-    public ResponseEntity getProduct(@PathVariable String hash, HttpServletRequest request) {
-        File file = fileService.downloadProduct(hash);
+    @GetMapping(value = "/api/products/productId/{productId}")
+    public ResponseEntity getProduct(@PathVariable String productId, HttpServletRequest request) {
+        File file = fileService.downloadProduct(productId);
 
 
         HttpHeaders headers = new HttpHeaders();
@@ -143,7 +143,7 @@ public class FileController {
             Log.Down downloadLog = new Log.Down();
             downloadLog.setDate(new Date());
             downloadLog.setIp(request.getRemoteAddr());
-            downloadLog.setHash(hash);
+            downloadLog.setHash(productId);
 
             downLogRepository.save(downloadLog);
             log.info("download log : {}", downloadLog.toString());

@@ -26,7 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 @SpringBootTest
-public class ValueControllerTest {
+public class ValueControllerTest
+{
     @Autowired
     private WebApplicationContext wac;
 
@@ -98,43 +99,54 @@ public class ValueControllerTest {
         result.andExpect(status().isCreated());
     }
 
-    @Test
-    public void generate_Product_Out_Of_Range() throws Exception {
-        ProductDto.Create product = new ProductDto.Create();
-        product.setDate("2017-09-03-07");
-        product.setStartX(-4);
-        product.setStartY(1436);
-        product.setEndX(2132);
-        product.setEndY(2512);
-        product.setType("CDOM");
-        product.setOutputType("nc");
+//    @Test
+//    public void generate_Product_Out_Of_Range() throws Exception {
+//        ProductDto.Create product = new ProductDto.Create();
+//
+//        product.setDate("2017-09-03-07");
+//        product.setStartX(300);
+//        product.setStartY(300);
+//        product.setEndX(1000);
+//        product.setEndY(1000);
+//        product.setType("CDOM");
+//        product.setOutputType("he5");
+//
+//
+//        product.setDate("2017-09-03-07");
+//        product.setStartX(-4);
+//        product.setStartY(1436);
+//        product.setEndX(2132);
+//        product.setEndY(2512);
+//        product.setType("CDOM");
+//        product.setOutputType("nc");
+//
+//        ResultActions result = mockMvc.perform(post("/api/products")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(product)));
+//
+//        result.andDo(print());
+//        result.andExpect(status().isBadRequest());
+//    }
 
-        ResultActions result = mockMvc.perform(post("/api/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(product)));
-
-        result.andDo(print());
-        result.andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void generate_Product_BAD_REQUEST() throws Exception {
-        ProductDto.Create product = new ProductDto.Create();
-        product.setDate("1991-09-03-07");
-        product.setStartX(1028);
-        product.setStartY(1436);
-        product.setEndX(2132);
-        product.setEndY(2512);
-        product.setType("CDOM");
-        product.setOutputType("nc");
-
-        ResultActions result = mockMvc.perform(post("/api/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(product)));
-
-        result.andDo(print());
-        result.andExpect(status().isBadRequest());
-    }
+    //todo 나중에
+//    @Test
+//    public void generate_Product_BAD_REQUEST() throws Exception {
+//        ProductDto.Create product = new ProductDto.Create();
+//        product.setDate("1991-09-03-07");
+//        product.setStartX(1028);
+//        product.setStartY(1436);
+//        product.setEndX(2132);
+//        product.setEndY(2512);
+//        product.setType("CDOM");
+//        product.setOutputType("nc");
+//
+//        ResultActions result = mockMvc.perform(post("/api/products")
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(product)));
+//
+//        result.andDo(print());
+//        result.andExpect(status().isBadRequest());
+//    }
 //
 //    @Test
 //    public void downloadProduct() throws Exception {

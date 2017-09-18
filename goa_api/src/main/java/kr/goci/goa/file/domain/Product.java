@@ -12,6 +12,7 @@ import java.util.Date;
  */
 @Entity
 @Data
+@NoArgsConstructor
 public class Product {
     @Id
     @GeneratedValue

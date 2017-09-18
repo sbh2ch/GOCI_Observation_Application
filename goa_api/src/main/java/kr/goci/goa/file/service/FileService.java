@@ -5,8 +5,10 @@ import kr.goci.goa.commons.Exception.OutOfRangeException;
 import kr.goci.goa.commons.Utils;
 import kr.goci.goa.file.domain.Image;
 import kr.goci.goa.file.domain.ImageDto;
+import kr.goci.goa.file.domain.Product;
 import kr.goci.goa.file.domain.ProductDto;
 import kr.goci.goa.file.repository.ImageRepository;
+import kr.goci.goa.file.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -30,6 +32,9 @@ public class FileService {
 
     @Autowired
     private ImageRepository imageRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public byte[] displayImage(String hashcode) throws IOException {
         Image selectedImage = imageRepository.findByHashcode(hashcode);
@@ -98,6 +103,8 @@ public class FileService {
         ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
         res.add(new Link(SERVER_NAME + "/api/products/productId/"+ productId).withRel("down_product"));
 
+        productRepository.save(new Product(filePath, fileName, product.getDate(), product.getStartX(), product.getStartY(), product.getEndX(), product.getEndY(), product.getType(), productId, product.getOutputType(),new Date()));
+
         return res;
     }
 
@@ -123,8 +130,8 @@ public class FileService {
 //        return res;
 //    }
 
-    public File downloadProduct(String hashcode) {
-        Image productInfo = imageRepository.findByHashcode(hashcode);
+    public File downloadProduct(String productId) {
+        Product productInfo = productRepository.findByProductId(productId);
         if (productInfo == null) {
             throw new SQLNotExistException("download product");
         }
