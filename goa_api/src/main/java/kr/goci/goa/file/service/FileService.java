@@ -89,39 +89,39 @@ public class FileService {
         String filePath = now[0] + "/" + now[1] + "/" + now[2] + "/" + productId;
         String fileName = "GOCI_CROP_" + dates[0] + dates[1] + dates[2] + dates[3] + now[3] + "." + product.getType();
         File mkdir = new File("E:/GOA_TEMP/" + filePath);
-        String params = dateParams + product.getType() + " " + product.getName() + " " + product.getStartX() + " " + product.getEndX() + " " + product.getStartY() + " " + product.getEndY() + " " + product.getOutputType() + " " + product.getPath();
+        String params = dateParams + product.getType() + " " + fileName + " " + product.getStartX() + " " + product.getEndX() + " " + product.getStartY() + " " + product.getEndY() + " " + product.getOutputType() + " " + filePath;
 
         if (!mkdir.exists()) mkdir.mkdirs();
 
         Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
 
-        ProductDto.Response res = new ProductDto.Response(product.getName() + ".zip");
+        ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
         res.add(new Link(SERVER_NAME + "/api/products/productId/"+ productId).withRel("down_product"));
 
         return res;
     }
 
-    public ProductDto.Response makeProductt(ProductDto.Create product) throws IOException, InterruptedException {
-        Image productInfo = imageRepository.findByHashcode(product.getHashcode());
-        if (productInfo == null) {
-            throw new SQLNotExistException("make product");
-        }
-
-        String[] dates = productInfo.getFiledate().split("-");
-        StringBuilder dateParams = new StringBuilder();
-        Arrays.stream(dates)
-                .forEach(date -> dateParams.append(date).append(" "));
-
-        String params = dateParams + productInfo.getType() + " " + productInfo.getName() + " " + productInfo.getStartX() + " " + productInfo.getEndX() + " " + productInfo.getStartY() + " " + productInfo.getEndY() + " " + product.getOutputType() + " " + productInfo.getPath();
-
-        Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
-
-        ProductDto.Response res = new ProductDto.Response(productInfo.getName() + ".zip");
-
-        res.add(new Link(SERVER_NAME + "/api/products/hashes/" + productInfo.getHashcode()).withRel("down_product"));
-
-        return res;
-    }
+//    public ProductDto.Response makeProductt(ProductDto.Create product) throws IOException, InterruptedException {
+//        Image productInfo = imageRepository.findByHashcode(product.getHashcode());
+//        if (productInfo == null) {
+//            throw new SQLNotExistException("make product");
+//        }
+//
+//        String[] dates = productInfo.getFiledate().split("-");
+//        StringBuilder dateParams = new StringBuilder();
+//        Arrays.stream(dates)
+//                .forEach(date -> dateParams.append(date).append(" "));
+//
+//        String params = dateParams + productInfo.getType() + " " + productInfo.getName() + " " + productInfo.getStartX() + " " + productInfo.getEndX() + " " + productInfo.getStartY() + " " + productInfo.getEndY() + " " + product.getOutputType() + " " + productInfo.getPath();
+//
+//        Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
+//
+//        ProductDto.Response res = new ProductDto.Response(productInfo.getName() + ".zip");
+//
+//        res.add(new Link(SERVER_NAME + "/api/products/hashes/" + productInfo.getHashcode()).withRel("down_product"));
+//
+//        return res;
+//    }
 
     public File downloadProduct(String hashcode) {
         Image productInfo = imageRepository.findByHashcode(hashcode);

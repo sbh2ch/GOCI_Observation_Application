@@ -119,7 +119,7 @@ public class ValueControllerTest {
 
     @Test
     public void generate_Product_BAD_REQUEST() throws Exception {
-        ProductDto.Create product = new ProductDto().Create();
+        ProductDto.Create product = new ProductDto.Create();
         product.setDate("1991-09-03-07");
         product.setStartX(1028);
         product.setStartY(1436);
