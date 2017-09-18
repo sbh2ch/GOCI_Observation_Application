@@ -2,6 +2,7 @@ import {handleActions, createAction} from 'redux-actions';
 import {Map, List, fromJS} from 'immutable';
 import {pender} from 'redux-pender';
 import * as WebAPI from '../lib/web-api';
+import moment from 'moment';
 
 //todo SET_MAP, OPTION, TILESIZE 통합
 const SET_MAP = 'ui/SET_MAP';
@@ -13,6 +14,8 @@ const GET_VALUE = 'value/GET_VALUE';
 const SET_VALUES = 'value/SET_VALUES';
 const SET_MENU = 'value/SET_MENU';
 const SET_CROP_TYPE = 'crop/SET_CROP_TYPE';
+const CREATE_PRODUCT = 'crop/CREATE_PRODUCT';
+const CHANGE_STEP = 'crop/CHANGE_STEP';
 
 export const setMenu = createAction(SET_MENU);
 export const setOption = createAction(SET_OPTION); // { type }
@@ -23,6 +26,8 @@ export const getValueArr = createAction(GET_VALUE, WebAPI.getValue, payload => p
 export const setValues = createAction(SET_VALUES); // {zoom, arrX, arrY, posX, posY};
 export const setMap = createAction(SET_MAP);
 export const setCropType = createAction(SET_CROP_TYPE); // {type}
+export const createProduct = createAction(CREATE_PRODUCT, WebAPI.createProduct); // {date, startX, startY, endX, endY, type, outputType}
+export const changeStep = createAction(CHANGE_STEP); //{step}
 
 const generate = () => {
     const value = [new Array(6), new Array(12), new Array(25), new Array(50)];
@@ -80,13 +85,14 @@ const initialState = Map({
 });
 
 export default handleActions({
+    [CHANGE_STEP]: (state, action) => state.setIn(['crop', 'step'], parseInt(action.payload)),
     [SET_CROP_TYPE]: (state, action) => state.setIn(['crop', 'cropType'], action.payload),
     [SET_MAP]: (state, action) => {
         const naver = window.naver;
 
         return state.set('map', action.payload).setIn(['crop', 'rectangle'], new naver.maps.Rectangle({
             map: action.payload,
-            bounds: [45.6195858, 67.1928595, 66.5689034, 87.8594302],
+            bounds: [44.4375, 50.3125, 80.6875, 89.0625],
             fillColor: '#00bf46',
             fillOpacity: 0.4,
             strokeWeight: 2,
@@ -129,6 +135,14 @@ export default handleActions({
 
             return state.setIn(['values', 'value', zoom - 3, arrX, arrY], fromJS(payload.data))
                 .setIn(['info', 'selected', 'value'], payload.data[posX][posY]);
+        }
+    }),
+    ...pender({
+        type: CREATE_PRODUCT,
+        onSuccess: (state, action) => {
+            const {href} = action.payload.data.links[0];
+
+            return state.setIn(['crop', 'link'], href).setIn(['crop', 'step'], 3);
         }
     })
 }, initialState);

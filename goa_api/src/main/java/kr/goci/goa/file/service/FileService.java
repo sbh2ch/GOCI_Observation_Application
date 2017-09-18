@@ -28,7 +28,7 @@ import java.util.Date;
 @Transactional
 @Slf4j
 public class FileService {
-    private String SERVER_NAME = "http://localhost:8080";
+    private String SERVER_NAME = "http://kosc.kr:8080";
 
     @Autowired
     private ImageRepository imageRepository;

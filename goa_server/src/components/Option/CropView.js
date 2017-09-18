@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import oc from 'open-color';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import OkIcon from 'react-icons/lib/fa/check';
 import NoIcon from 'react-icons/lib/fa/close';
@@ -31,17 +32,6 @@ const StyledFirstButton = styled.div`
     
 `;
 
-const StyledSecondButton = styled.div`
-    width: 100%;
-    display: flex;
-    align-items: center;
-    height: 2rem;
-    justify-content: center;
-    flex-direction: row;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    cursor: ${props => props.step === 2 && 'pointer'};
-`;
 const StyledThirdButton = styled.div`
     display: flex;
     align-items: center;
@@ -51,11 +41,22 @@ const StyledThirdButton = styled.div`
     box-shadow: 0 1px 2px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.10);
     width: 100%;
     height: 2rem;
-    cursor: ${props => props.step === 3 && 'pointer'};
+    cursor: ${props => props.step === 3 ? 'pointer' : 'no-drop'};
     background: ${props => props.step === 3 ? oc.blue[7] : oc.gray[4]};
 
     ${props => props.step === 3 ? '&:hover{background:#1b6ec2;}' : ''}
     
+`;
+
+const StyledSecondButton = styled.div`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 2rem;
+    justify-content: center;
+    flex-direction: row;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 `;
 
 const MakeButtons = styled.div`
@@ -68,30 +69,30 @@ const MakeButtonOK = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all .2s;
     height: 2rem;
+    cursor: ${props => props.step === 2 ? 'pointer' : 'no-drop'};
 
     color: white;
-    cursor: pointer;
-    background: #37b24d;
-    
-    &:hover {
-        background: #40c057;
-    }
+    background: ${props => props.step === 2 ? '#37b24d' : oc.gray[4]};
+
+    ${props => props.step === 2 ? '&:hover{background:#40c057;}' : ''}
+
 `;
 const MakeButtonNO = styled.div`
     flex: 1;
     display: flex;
+    transition: all .2s;
     align-items: center;
     justify-content: center;
     height: 2rem;
-
-    color: white;
-    cursor: pointer;
-    background: #f03e3e;
+    cursor: ${props => props.step === 2 ? 'pointer' : 'no-drop'};
     
-    &:hover {
-        background: #fa5252;
-    }
+    color: white;
+    background: ${props => props.step === 2 ? '#f03e3e' : oc.gray[4]};
+
+     ${props => props.step === 2 ? '&:hover{background:#fa5252;}' : ''}
+
 `;
 
 const TypeButtons = styled.div`
@@ -102,23 +103,26 @@ const TypeButtons = styled.div`
 `;
 
 const StyledItem = styled.div`
-    flex: 1; 
 
+    flex: 1; 
+    cursor: ${props => props.step === 2 ? 'pointer' : 'no-drop'};
+    transition: all .2s;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 2rem;
     
     color: ${oc.gray[9]};
+    background: ${props => props.step === 2 ? 'white' : oc.gray[4]};
+    color: ${props => props.step === 2 ? oc.gray[9] : 'white'};
+
 
     /* 기타 */
     font-size: 1rem;
-    cursor: pointer;
 
     /* 마우스가 위에 있을 때 */
-    &:hover {
-        background: ${oc.gray[0]};
-    }
+     ${props => props.step === 2 ? '&:hover{background:'+oc.gray[0]+';}' : ''}
+
 `;
 
 const Bar = styled.div`
@@ -127,15 +131,14 @@ const Bar = styled.div`
     bottom: 0px;
     height: 4px;
     width: 50%;
-    transition: ease-in .25s;
+    transition: all .2s;
     transform: ${props => props.right ? 'translateX(100%)' : 'none'};
     
-    /* 색상 */
-    background: ${oc.blue[6]};
+    background: ${props => props.step === 2 ? oc.blue[6] : oc.gray[4]};
 `;
 
-const Item = ({children, onSelect, name}) => (
-    <StyledItem onClick={() => onSelect(name)}>
+const Item = ({children,step, onSelect, name}) => (
+    <StyledItem step={step} onClick={() => onSelect(name)}>
         {children}
     </StyledItem>
 );
@@ -148,42 +151,47 @@ const FirstBtn = ({children, step, type, handleCreateCropBox}) => {
     )
 };
 
-const SecondBtn = ({step, cropType, handleTypeSelect}) => {
+const SecondBtn = ({step, cropType, handleCreateProduct, handleCancelProduct, handleTypeSelect}) => {
 
     return (
         <StyledSecondButton step={step}>
-            <TypeButtons>
-                <Item onSelect={handleTypeSelect} name="he5">he5</Item>
-                <Item onSelect={handleTypeSelect} name="nc">NetCDF</Item>
-                <Bar right={cropType === 'nc'}/>
+            <TypeButtons step={step}>
+                <Item onSelect={handleTypeSelect} step={step} name="he5">he5</Item>
+                <Item onSelect={handleTypeSelect} step={step} name="nc">NetCDF</Item>
+                <Bar step={step} right={cropType === 'nc'}/>
             </TypeButtons>
             &nbsp;
-            <MakeButtons>
-                <MakeButtonOK><OkIcon/></MakeButtonOK>
-                <MakeButtonNO><NoIcon/></MakeButtonNO>
+            <MakeButtons step={step}>
+                <MakeButtonOK step={step} onClick={handleCreateProduct}><OkIcon/></MakeButtonOK>
+                <MakeButtonNO step={step} onClick={handleCancelProduct}><NoIcon/></MakeButtonNO>
             </MakeButtons>
         </StyledSecondButton>
     )
 };
 
-const ThirdBtn = ({children, step}) => {
+const ThirdBtn = ({children, handleDownload, step}) => {
 
     return (
-        <StyledThirdButton step={step}>{children}</StyledThirdButton>
+        <StyledThirdButton step={step} onClick={handleDownload}>{children}</StyledThirdButton>
     )
 };
 
 class ValueView extends Component {
 
     render() {
-        const {type, step, cropType, handleTypeSelect, handleCreateCropBox} = this.props;
+        const {type, step, handleDownload, handleCreateProduct, handleCancelProduct, cropType, handleTypeSelect, handleCreateCropBox} = this.props;
 
         return (
             <Wrapper>
-                <FirstBtn handleCreateCropBox={handleCreateCropBox} step={step}
-                          type={type}>{type === 'RGB' ? 'ㄴㄴ' : 'Create the crop box'}</FirstBtn>
-                <SecondBtn step={step} cropType={cropType} handleTypeSelect={handleTypeSelect}>Flex</SecondBtn>
-                <ThirdBtn step={step}>Download</ThirdBtn>
+                <FirstBtn handleCreateCropBox={handleCreateCropBox}
+                          step={step}
+                          type={type}>{type === 'RGB' ? 'Change Type' : 'Create the crop box'}</FirstBtn>
+                <SecondBtn step={step}
+                           cropType={cropType}
+                           handleCreateProduct={handleCreateProduct}
+                           handleCancelProduct={handleCancelProduct}
+                           handleTypeSelect={handleTypeSelect}>Flex</SecondBtn>
+                <ThirdBtn step={step} handleDownload={handleDownload}>Download</ThirdBtn>
             </Wrapper>
         );
     }

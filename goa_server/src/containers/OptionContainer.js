@@ -14,28 +14,52 @@ import CropView from '../components/Option/CropView';
 
 class OptionContainer extends Component {
     handleCreateCropBox = () => {
-        const {rectangle} = this.props;
+        const {rectangle, UIActions, step, type} = this.props;
+        if (step !== 1 || type === 'RGB') return;
+
         rectangle.setVisible(!rectangle.getVisible());
         rectangle.setEditable(true);
+
+        UIActions.changeStep(2);
         //todo step2단계 변경
     };
 
     handleCreateProduct = () => {
-        
+        const {rectangle, UIActions, year, month, day, time, type, cropType, step} = this.props; // {date, startX, startY, endX, endY, type, outputType}
+        const {_max, _min} = rectangle.bounds;
+
+        if (step !== 2) return;
+        UIActions.createProduct(
+            {
+                date: year + '-' + month + '-' + day + '-' + time,
+                startX: Math.round(_min.x * 32),
+                startY: Math.round(_min.y * 32),
+                endX: Math.round(_max.x * 32),
+                endY: Math.round(_max.y * 32),
+                type: type,
+                outputType: cropType
+            });
+        //todo Spinner 추가
+
+        UIActions.changeStep(3);
     };
 
     handleCancelProduct = () => {
-        const {rectangle} = this.props;
+        const {rectangle, UIActions, step} = this.props;
+
+        if (step !== 2) return;
         rectangle.setVisible(false);
-        //todo step1단계 변경
-        //todo API서버 로직 변경 필요함. 영역선택 -> 산출물 생성 -> 다운로드
+        UIActions.changeStep(1);
     };
 
     handleDownload = () => {
-        //
+        if (this.props.step !== 3) return;
+
+        window.location.assign(this.props.link);
     };
 
     handleTypeSelect = (name) => {
+        if (this.props.step !== 2) return;
         const {setCropType} = this.props.UIActions;
 
         setCropType(name);
@@ -93,13 +117,15 @@ class OptionContainer extends Component {
 
 
     render() {
-        const {handleTypeSelect, handleTimeChange, handleToggle, getMapType, handleCreateCropBox} = this;
+        const {handleTypeSelect, handleDownload, handleCreateProduct, handleTimeChange, handleToggle, handleCancelProduct, getMapType, handleCreateCropBox} = this;
 
-        const {cropType, mode, year, map, step, month, day, time, pending, type, isDatePickerOpen, UIActions, lon, lat, value} = this.props;
+        const {cropType, mode, year, map, step, month, day, time, pending, type, isDatePickerOpen, lon, lat, value} = this.props;
         return (
             <Option>
-                <Dimmed visible={pending['value/GET_VALUE'] || pending['value/GET_LATLON']}/>
-                <Spinner visible={pending['value/GET_VALUE'] || pending['value/GET_LATLON']}/>
+                <Dimmed
+                    visible={pending['value/GET_VALUE'] || pending['value/GET_LATLON'] || pending['crop/CREATE_PRODUCT']}/>
+                <Spinner
+                    visible={pending['value/GET_VALUE'] || pending['value/GET_LATLON'] || pending['crop/CREATE_PRODUCT']}/>
                 <Layout.Title style={{borderBottom: `1px solid #bcbcbc`}}>
                     Real Time Satellite Image
                 </Layout.Title>
@@ -131,8 +157,11 @@ class OptionContainer extends Component {
                             selected={{lon, lat, value}}/> :
                         <CropView
                             handleCreateCropBox={handleCreateCropBox}
+                            handleCreateProduct={handleCreateProduct}
                             type={type}
+                            handleDownload={handleDownload}
                             handleTypeSelect={handleTypeSelect}
+                            handleCancelProduct={handleCancelProduct}
                             cropType={cropType}
                             step={step}/>
                 }

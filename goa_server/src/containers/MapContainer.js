@@ -101,26 +101,28 @@ class MapContainer extends Component {
         const {marker} = this.state;
 
         this.setState({clickListener: naver.maps.Event.addListener(map, 'click', this.onValueClickListener)});
-        this.setState({
-            marker: new naver.maps.Marker({
-                icon: {
-                    url: 'assets/img/marker.png',
-                    size: new naver.maps.Size(25, 34),
-                    scaledSize: new naver.maps.Size(25, 34),
-                    origin: new naver.maps.Point(0, 0),
-                    anchor: new naver.maps.Point(12, 34)
-                },
-                position: new naver.maps.Point(62, 66.875),
-                map: map
-            })
-        });
+        if(marker === undefined){
+            this.setState({
+                marker: new naver.maps.Marker({
+                    icon: {
+                        url: 'assets/img/marker.png',
+                        size: new naver.maps.Size(25, 34),
+                        scaledSize: new naver.maps.Size(25, 34),
+                        origin: new naver.maps.Point(0, 0),
+                        anchor: new naver.maps.Point(12, 34)
+                    },
+                    position: new naver.maps.Point(62, 66.875),
+                    map: map
+                })
+            });
+        }
     };
 
     componentWillReceiveProps(nextProps) {
         const naver = window.naver;
         const {type} = nextProps;
         const {marker, clickListener} = this.state;
-        const {map, rectangle} = this.props;
+        const {map, rectangle, UIActions} = this.props;
 
 
         // todo 이벤트 처리 차후 리펙토링 필요함. (더럽더럽)
@@ -136,7 +138,7 @@ class MapContainer extends Component {
                 naver.maps.Event.removeListener(clickListener);
             } else {
                 rectangle.setVisible(false);
-                //todo 1step으로 변경
+                UIActions.changeStep(1);
 
                 if (nextProps.type !== 'RGB') {
                     this.setUpListenerAndMarker();
@@ -146,15 +148,17 @@ class MapContainer extends Component {
 
         if (this.props.type !== nextProps.type) {
             naver.maps.Event.removeListener(clickListener);
-            if (type === 'RGB') {
+            if (nextProps.type === 'RGB') {
+                rectangle.setVisible(false);
                 map.setCursor('auto');
+                UIActions.changeStep(1);
 
                 if (marker !== undefined)
                     marker.onRemove();
 
                 this.setState({marker: undefined});
             } else {
-                if (nextProps.mode !== 'crop') {
+                if (this.props.mode !== 'crop') {
                     map.setCursor('pointer');
                     this.setUpListenerAndMarker();
                 }
