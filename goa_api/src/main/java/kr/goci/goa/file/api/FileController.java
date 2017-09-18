@@ -88,15 +88,7 @@ public class FileController {
     public ResponseEntity makeProduct(@RequestBody ProductDto.Create product) {
         ProductDto.Response res;
 
-
-
-        return null;
-    }
-
-    @PostMapping(value = "/api/products", produces = "application/json;charset=UTF-8")
-    public ResponseEntity makeProducts(@RequestBody ProductDto.Create product) {
-        ProductDto.Response res;
-        try {
+        try{
             res = fileService.makeProduct(product);
         } catch (Exception e) {
             log.error("product create error : {}", e.toString());
@@ -113,6 +105,27 @@ public class FileController {
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+//    @PostMapping(value = "/api/productsss", produces = "application/json;charset=UTF-8")
+//    public ResponseEntity makeProducts(@RequestBody ProductDto.Create product) {
+//        ProductDto.Response res;
+//        try {
+//            res = fileService.makeProduct(product);
+//        } catch (Exception e) {
+//            log.error("product create error : {}", e.toString());
+//            return new ResponseEntity<>(new ErrorResponse("잘못 된 요청입니다.", "bad.request.create.product"), HttpStatus.BAD_REQUEST);
+//        }
+//
+//        String result = null;
+//        try {
+//            result = objectMapper.writeValueAsString(res);
+//        } catch (JsonProcessingException e) {
+//            log.error("json parsing error : {}", e.toString());
+//            return new ResponseEntity<>(new ErrorResponse("파싱 실패", "parsing.fail"), HttpStatus.CONFLICT);
+//        }
+//
+//        return new ResponseEntity<>(result, HttpStatus.CREATED);
+//    }
 
     @GetMapping(value = "/api/products/hashes/{hash}")
     public ResponseEntity getProduct(@PathVariable String hash, HttpServletRequest request) {
