@@ -173,6 +173,7 @@ class OptionContainer extends Component {
 }
 
 export default connect((state) => ({
+        link: state.ui.getIn(['crop', 'link']),
         cropType: state.ui.getIn(['crop', 'cropType']),
         drawingManager: state.ui.get('drawingManager'),
         rectangle: state.ui.getIn(['crop', 'rectangle']),
