@@ -130,6 +130,7 @@ const Bar = styled.div`
     position: absolute;
     bottom: 0px;
     height: 4px;
+    left: 0px;
     width: 50%;
     transition: all .2s;
     transform: ${props => props.right ? 'translateX(100%)' : 'none'};
