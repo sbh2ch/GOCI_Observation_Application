@@ -21,7 +21,6 @@ class OptionContainer extends Component {
         rectangle.setEditable(true);
 
         UIActions.changeStep(2);
-        //todo step2단계 변경
     };
 
     handleCreateProduct = () => {
@@ -39,9 +38,6 @@ class OptionContainer extends Component {
                 type: type,
                 outputType: cropType
             });
-        //todo Spinner 추가
-
-        UIActions.changeStep(3);
     };
 
     handleCancelProduct = () => {

@@ -19,7 +19,7 @@
             <entry file="file://$PROJECT_DIR$/src/test/java/kr/goci/goa/value/api/ValueControllerTest.java">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="854">
-                  <caret line="122" column="70" lean-forward="true" selection-start-line="122" selection-start-column="70" selection-end-line="122" selection-end-column="70" />
+                  <caret line="122" column="70" lean-forward="false" selection-start-line="122" selection-start-column="70" selection-end-line="122" selection-end-column="70" />
                   <folding>
                     <marker date="1505732921651" expanded="true" signature="3302:4261" ph="..." />
                   </folding>
@@ -934,7 +934,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-9" y="-9" width="3858" height="2130" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3282365" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -1233,6 +1232,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="780">
           <caret line="52" column="0" lean-forward="false" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1295,7 +1295,7 @@
     <entry file="file://$PROJECT_DIR$/src/test/java/kr/goci/goa/value/api/ValueControllerTest.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="854">
-          <caret line="122" column="70" lean-forward="true" selection-start-line="122" selection-start-column="70" selection-end-line="122" selection-end-column="70" />
+          <caret line="122" column="70" lean-forward="false" selection-start-line="122" selection-start-column="70" selection-end-line="122" selection-end-column="70" />
           <folding>
             <marker date="1505732921651" expanded="true" signature="3302:4261" ph="..." />
           </folding>

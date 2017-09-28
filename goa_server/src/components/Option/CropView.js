@@ -118,7 +118,7 @@ const StyledItem = styled.div`
 
 
     /* 기타 */
-    font-size: 1rem;
+    font-size: 0.9rem;
 
     /* 마우스가 위에 있을 때 */
      ${props => props.step === 2 ? '&:hover{background:'+oc.gray[0]+';}' : ''}
@@ -157,7 +157,7 @@ const SecondBtn = ({step, cropType, handleCreateProduct, handleCancelProduct, ha
     return (
         <StyledSecondButton step={step}>
             <TypeButtons step={step}>
-                <Item onSelect={handleTypeSelect} step={step} name="he5">he5</Item>
+                <Item onSelect={handleTypeSelect} step={step} name="he5">HDF-EOS5</Item>
                 <Item onSelect={handleTypeSelect} step={step} name="nc">NetCDF</Item>
                 <Bar step={step} right={cropType === 'nc'}/>
             </TypeButtons>
