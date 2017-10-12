@@ -78,7 +78,10 @@ public class FileService {
         return responseImage;
     }
 
-    // 새로 만든것
+    /*
+    * Crop 파일 생성
+    * 랜덤 hash값으로 생성된다.
+    * */
     public ProductDto.Response makeProduct(ProductDto.Create product) throws IOException, InterruptedException {
         String[] dates = product.getDate().split("-");
         StringBuilder dateParams = new StringBuilder();
@@ -96,17 +99,52 @@ public class FileService {
         File mkdir = new File("E:/GOA_TEMP/" + filePath);
         String params = dateParams + product.getType() + " " + fileName + " " + product.getStartX() + " " + product.getEndX() + " " + product.getStartY() + " " + product.getEndY() + " " + product.getOutputType() + " " + filePath;
 
+        System.out.println(params);
         if (!mkdir.exists()) mkdir.mkdirs();
 
-        Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
-
+//        Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
+        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\\"Program Files\"\\GDPS\\GAreaDivider.exe -batchfile -E:\\GOA\\2017\\09\\03\\01\\COMS_GOCI_L2A_GA_2017090301.CHL.he5 -E:\\outputtest.he5 -0,0,5000,5000 -0"};
+//        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\GOA\\crop\\cropProducts.exe " + params};
+        Runtime.getRuntime().exec(cmd).waitFor();
+        System.out.println("완료");
         ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
-        res.add(new Link(SERVER_NAME + "/api/products/productId/"+ productId).withRel("down_product"));
+        res.add(new Link(SERVER_NAME + "/api/products/productId/" + productId).withRel("down_product"));
 
-        productRepository.save(new Product(filePath, fileName, product.getDate(), product.getStartX(), product.getStartY(), product.getEndX(), product.getEndY(), product.getType(), productId, product.getOutputType(),new Date()));
+        productRepository.save(new Product(filePath, fileName, product.getDate(), product.getStartX(), product.getStartY(), product.getEndX(), product.getEndY(), product.getType(), productId, product.getOutputType(), new Date()));
 
         return res;
     }
+
+//    // 새로 만든것
+//    public ProductDto.Response makeProduct(ProductDto.Create product) throws IOException, InterruptedException {
+//        String[] dates = product.getDate().split("-");
+//        StringBuilder dateParams = new StringBuilder();
+//        Arrays.stream(dates)
+//                .forEach(date -> dateParams.append(date).append(" "));
+//        String productId = Utils.ShortId.generate() + Utils.ShortId.generate();
+//
+//        if (product.getStartX() < 0 || product.getStartY() < 0 || product.getEndX() > 5000 || product.getEndY() > 5000) {
+//            throw new OutOfRangeException("범위를 벗어났습니다.");
+//        }
+//
+//        String[] now = new SimpleDateFormat("yyyy-MM-dd-ssSSS").format(new Date()).split("-");
+//        String filePath = now[0] + "/" + now[1] + "/" + now[2] + "/" + productId;
+//        String fileName = "GOCI_CROP_" + dates[0] + dates[1] + dates[2] + dates[3] + now[3] + "." + product.getType();
+//        File mkdir = new File("E:/GOA_TEMP/" + filePath);
+//        String params = dateParams + product.getType() + " " + fileName + " " + product.getStartX() + " " + product.getEndX() + " " + product.getStartY() + " " + product.getEndY() + " " + product.getOutputType() + " " + filePath;
+//
+//        System.out.println(params);
+//        if (!mkdir.exists()) mkdir.mkdirs();
+//
+//        Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
+//
+//        ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
+//        res.add(new Link(SERVER_NAME + "/api/products/productId/"+ productId).withRel("down_product"));
+//
+//        productRepository.save(new Product(filePath, fileName, product.getDate(), product.getStartX(), product.getStartY(), product.getEndX(), product.getEndY(), product.getType(), productId, product.getOutputType(),new Date()));
+//
+//        return res;
+//    }
 
 //    public ProductDto.Response makeProductt(ProductDto.Create product) throws IOException, InterruptedException {
 //        Image productInfo = imageRepository.findByHashcode(product.getHashcode());
