@@ -106,7 +106,6 @@ public class FileService {
         String[] cmd = new String[]{"cmd.exe", "/c", "C:\\\"Program Files\"\\GDPS\\GAreaDivider.exe -batchfile -E:\\GOA\\2017\\09\\03\\01\\COMS_GOCI_L2A_GA_2017090301.CHL.he5 -E:\\outputtest.he5 -0,0,5000,5000 -0"};
 //        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\GOA\\crop\\cropProducts.exe " + params};
         Runtime.getRuntime().exec(cmd).waitFor();
-        System.out.println("완료");
         ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
         res.add(new Link(SERVER_NAME + "/api/products/productId/" + productId).withRel("down_product"));
 

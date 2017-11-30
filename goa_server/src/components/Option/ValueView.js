@@ -28,7 +28,7 @@ const StyledValue = styled.div`
 
 const Box = styled.div`
     background: ${oc.gray[3]};
-    flex: 2;
+    flex: 3;
     padding: 3px;
     height: 2rem;
     border-radius: 2px;
@@ -36,6 +36,13 @@ const Box = styled.div`
     text-align: right;
     padding-right: 3rem;
     box-shadow: 0 1px 2px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.20);
+`;
+const Unit = styled.div`
+    flex: 1.2;
+    padding: 3px;
+    height: 2rem;
+    padding-left: 0.5rem;
+    text-align: left;
 `;
 
 const Type = styled.div`
@@ -48,15 +55,21 @@ const Type = styled.div`
 
 const Value = ({children, value, type}) => (
     <StyledValue>
-        <Type>{children}</Type><Box>{value}</Box>
+        <Type>{children}</Type><Box>{value}</Box><Unit></Unit>
     </StyledValue>
 );
 
-const ValueView = ({type, selected}) => (
+const ProductValue = ({children, value, type, unit}) => (
+    <StyledValue>
+        <Type>{children}</Type><Box>{value}</Box><Unit>{unit}</Unit>
+    </StyledValue>
+);
+
+const ValueView = ({type, selected, unit}) => (
     <Wrapper>
         <Value value={selected.lat}>Latitude</Value>
         <Value value={selected.lon}>Longitude</Value>
-        <Value value={selected.value} type={type}>Value</Value>
+        <ProductValue value={selected.value} type={type} unit={unit}>Value</ProductValue>
     </Wrapper>
 );
 

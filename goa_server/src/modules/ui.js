@@ -56,11 +56,13 @@ const valueReset = () => {
     return value;
 };
 
+const nowDate = new Date();
+
 const initialState = Map({
     info: Map({
-        year: '2017',
-        month: '09',
-        day: '07',
+        year: nowDate.getYear() + 1900 + '',
+        month: nowDate.getMonth() + 1,
+        day: nowDate.getHours() < 12 ? nowDate.getDate() - 1 : nowDate.getDate(),
         time: '00',
         type: 'RGB',
         zoom: 3,

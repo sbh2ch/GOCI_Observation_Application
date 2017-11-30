@@ -31,7 +31,7 @@ class TypeSelector extends Component {
     };
 
     handleChange = (type) => {
-        const {onChange, year, month, day,map, time, getMapType} = this.props;
+        const {onChange, year, month, day, map, time, getMapType} = this.props;
         const naver = window.naver;
         onChange({name: 'type', value: type.value});
 
@@ -52,6 +52,7 @@ class TypeSelector extends Component {
                     onChange={this.handleChange}
                     searchable={false}
                     clearable={false}
+                    unit={this.state.unit}
                 />
             </Wrapper>
         );

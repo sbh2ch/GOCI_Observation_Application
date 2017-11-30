@@ -13,6 +13,11 @@ import Spinner from '../components/Spinner';
 import CropView from '../components/Option/CropView';
 
 class OptionContainer extends Component {
+    state = {
+        unit: '',
+        createType: 'he5'
+    };
+
     handleCreateCropBox = () => {
         const {rectangle, UIActions, step, type} = this.props;
         if (step !== 1 || type === 'RGB') return;
@@ -28,6 +33,12 @@ class OptionContainer extends Component {
         const {_max, _min} = rectangle.bounds;
 
         if (step !== 2) return;
+        //todo 넷시디엪 변환은 다음 버전에서 지원
+        if (this.state.createType === 'nc'){
+            alert('NetCDF conversion function will be supported in the next version.');
+
+            return;
+        }
         UIActions.createProduct(
             {
                 date: year + '-' + month + '-' + day + '-' + time,
@@ -57,13 +68,26 @@ class OptionContainer extends Component {
     handleTypeSelect = (name) => {
         if (this.props.step !== 2) return;
         const {setCropType} = this.props.UIActions;
-
+        this.setState({createType: name});
         setCropType(name);
     };
 
     handleTimeChange = (val) => {
         const {changeInfo} = this.props.UIActions;
-
+        switch (val.value) {
+            case 'CDOM':
+                this.setState({unit: 'm⁻¹'});
+                break;
+            case 'TSS':
+                this.setState({unit: 'g/m³'});
+                break;
+            case 'CHL':
+                this.setState({unit: 'mg/m³'});
+                break;
+            case 'RGB':
+                this.setState({unit: ''});
+                break;
+        }
         changeInfo(val);
     };
 
@@ -149,6 +173,7 @@ class OptionContainer extends Component {
                 {
                     mode === 'value' ?
                         <ValueView
+                            unit={this.state.unit}
                             type={type}
                             selected={{lon, lat, value}}/> :
                         <CropView

@@ -163,7 +163,7 @@ const SecondBtn = ({step, cropType, handleCreateProduct, handleCancelProduct, ha
             </TypeButtons>
             &nbsp;
             <MakeButtons step={step}>
-                <MakeButtonOK step={step} onClick={handleCreateProduct}><OkIcon/></MakeButtonOK>
+                <MakeButtonOK cropType={cropType} step={step} onClick={handleCreateProduct}><OkIcon/></MakeButtonOK>
                 <MakeButtonNO step={step} onClick={handleCancelProduct}><NoIcon/></MakeButtonNO>
             </MakeButtons>
         </StyledSecondButton>
