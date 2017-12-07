@@ -107,7 +107,7 @@ public class FileService {
 
 //        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\GOA\\crop\\cropProducts.exe " + params};
         Runtime.getRuntime().exec(cmd).waitFor();
-        ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
+        ProductDto.Response res = new ProductDto.Response(fileName + ".he5");
         res.add(new Link(SERVER_NAME + "/api/products/productId/" + productId).withRel("down_product"));
 
         productRepository.save(new Product(filePath, fileName, product.getDate(), product.getStartX(), product.getStartY(), product.getEndX(), product.getEndY(), product.getType(), productId, product.getOutputType(), new Date()));
@@ -174,7 +174,7 @@ public class FileService {
             throw new SQLNotExistException("download product");
         }
 
-        String filePath = "E:/GOA_TEMP/" + productInfo.getPath() + "/" + productInfo.getName() + ".zip";
+        String filePath = "E:/GOA_TEMP/" + productInfo.getPath() + "/" + productInfo.getName() + ".he5";
         File downFile = new File(filePath);
 
         return downFile;
