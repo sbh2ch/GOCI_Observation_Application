@@ -103,7 +103,8 @@ public class FileService {
         if (!mkdir.exists()) mkdir.mkdirs();
 
 //        Runtime.getRuntime().exec("C:\\GOA\\crop\\cropProducts.exe " + params).waitFor();
-        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\\"Program Files\"\\GDPS\\GAreaDivider.exe -batchfile -E:\\GOA\\2017\\09\\03\\01\\COMS_GOCI_L2A_GA_2017090301.CHL.he5 -E:\\outputtest.he5 -0,0,5000,5000 -0"};
+        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\\"Program Files\"\\GDPS\\GAreaDivider.exe -batchfile -E:\\GOA\\" + dates[0] + "\\" + dates[1] + "\\" + dates[2] + "\\" + dates[3] + "\\COMS_GOCI_L2A_GA_" + dates[0] + dates[1] + dates[2] + dates[3] + "." + product.getType() + ".he5 -E:\\GOA_TEMP\\" + filePath + "\\" + fileName + " -" + product.getStartX() + "," + product.getStartY() + "," + product.getEndX() + "," + product.getEndY() + " -0"};
+
 //        String[] cmd = new String[]{"cmd.exe", "/c", "C:\\GOA\\crop\\cropProducts.exe " + params};
         Runtime.getRuntime().exec(cmd).waitFor();
         ProductDto.Response res = new ProductDto.Response(fileName + ".zip");
